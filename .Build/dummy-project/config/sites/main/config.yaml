@@ -1,0 +1,29 @@
+base: 'http://web'
+errorHandling: {  }
+languages:
+  -
+    title: English
+    enabled: true
+    languageId: 0
+    base: /en/
+    locale: en_US.UTF-8
+    navigationTitle: English
+    flag: us
+  -
+    title: German
+    enabled: true
+    languageId: 1
+    base: /de/
+    locale: de_DE.UTF-8
+    navigationTitle: Deutsch
+    flag: de
+  -
+    title: German - Austria
+    enabled: true
+    languageId: 2
+    base: /de-at/
+    locale: de_AT.UTF-8
+    navigationTitle: Deutsch - Österreich
+    flag: at
+rootPageId: 1
+routes: {  }

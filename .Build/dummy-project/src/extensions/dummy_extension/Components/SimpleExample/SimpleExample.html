@@ -1,0 +1,24 @@
+<f:argument name="requiredArgument" type="string" description="Description of the required argument" />
+<f:argument name="optionalBool" type="bool" optional="{true}" description="this will render a checkbox in the Storybook UI" />
+<f:argument name="optionalInt" type="int" optional="{true}" description="This will render a number input in the Storybook UI" />
+<f:argument name="optionalFloat" type="float" optional="{true}" description="This will render a number input in the Storybook UI" />
+<f:argument name="optionalString" type="string" optional="{true}" description="This will render a number input in the Storybook UI" />
+
+<f:argument name="optionalWithDefaultBool" type="bool" optional="{true}" default="{false}" description="this will render a checkbox in the Storybook UI" />
+<f:argument name="optionalWithDefaultInt" type="int" optional="{true}" default="42" description="This will render a number input in the Storybook UI" />
+<f:argument name="optionalWithDefaultFloat" type="float" optional="{true}" default="3.14159" description="This will render a number input in the Storybook UI" />
+<f:argument name="optionalWithDefaultString" type="string" optional="{true}" default="Default String" description="This will render a number input in the Storybook UI" />
+
+<div>
+  <f:debug inline="{true}" title="SimpleExample Component Debug">{_all}</f:debug>
+</div>
+
+<div>
+  Slot Content:
+  <f:slot/>
+</div>
+
+<div>
+  Translation:
+  <f:translate key="translationLabel" extensionName="dummy_extension"/>
+</div>

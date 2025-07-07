@@ -1,0 +1,56 @@
+# With this setup you can Test the Storybook setup integrated with TYPO3, Fluid, EXT:storybook, Storybook and the Storybook Framework package
+services:
+  typo3:
+    image: webdevops/php-nginx:8.4-alpine
+    working_dir: ${PWD}/.Build/dummy-project
+    volumes:
+      - ${PWD}:${PWD}
+    environment:
+      WEB_DOCUMENT_ROOT: ${PWD}/.Build/dummy-project/public
+      TYPO3_CONTEXT: Development
+      APPLICATION_UID: ${USER:-1000}
+    ports:
+      - "8011:80"
+    healthcheck:
+      test: curl --fail-with-body http://localhost:80/_storybook/preview
+
+#  storybook:
+#    image: node:22
+#    working_dir: ${PWD}/.Build/dummy-project
+#    volumes:
+#      - ${PWD}:${PWD}
+#    command: >
+#      su node -c 'npm install && npm run storybook -- -h storybook'
+#    environment:
+#      NODE_ENV: development
+#      STORYBOOK_TYPO3_ENDPOINT: http://typo3:80/
+#    ports:
+#      - "6060:8080"
+#    healthcheck:
+#      test: curl --fail-with-body http://localhost:8080/index.json
+#    depends_on:
+#      typo3:
+#        condition: service_healthy
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.53.2-noble
+    working_dir: ${PWD}/.Build/dummy-project
+    volumes:
+      - ${PWD}:${PWD}
+      - ${X11_SOCKET:-./nope}:/tmp/.X11-unix
+    user: ${USER_ID:-0}
+#    command: >
+#      sh -c "npm install && npx playwright test"
+    environment:
+#      STORYBOOK_ENDPOINT: http://localhost:8080
+      STORYBOOK_TYPO3_ENDPOINT: http://typo3:80/
+      DISPLAY: ${DISPLAY:-}
+      CI: 1
+      FORCE_COLOR: 1
+    ports:
+      - "6060:8080"
+    depends_on:
+#      storybook:
+#        condition: service_healthy
+      typo3:
+        condition: service_healthy

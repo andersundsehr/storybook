@@ -1,0 +1,55 @@
+import { dirname, join } from 'node:path';
+import type { Entry, PresetProperty } from 'storybook/internal/types';
+
+function getAbsolutePath<I extends string>(value: I): I {
+  return dirname(require.resolve(join(value, 'package.json'))) as any;
+}
+
+export const core: PresetProperty<'core'> = async (config, options) => {
+  const framework = await options.presets.apply('framework');
+  // console.log('core()', {config, options, framework, presetsList: options.presetsList});
+
+  return {
+    ...config,
+    builder: getAbsolutePath('@storybook/builder-vite'),
+    renderer: getAbsolutePath('@storybook/server'),
+    disableTelemetry: true,
+  };
+};
+
+export const addons = [
+  '@storybook/addon-docs',
+  '@storybook/addon-a11y',
+];
+
+// export const core: PresetProperty<'core'> = {
+//   builder: getAbsolutePath('@storybook/builder-vite'),
+//   renderer: getAbsolutePath('@storybook/server'),
+//   disableTelemetry: true,
+// };
+
+export const previewAnnotations: PresetProperty<'previewAnnotations'> = async (entry: Entry[] = [], options) => {
+  const docsEnabled = Object.keys(await options.presets.apply('docs', {}, options)).length > 0;
+
+  return entry
+    .concat(require.resolve('./entry-preview'))
+    .concat(docsEnabled ? [require.resolve('./entry-preview-docs')] : []);
+};
+
+export const tags = ['autodocs'];
+
+/**
+ * BUGFIX for chromium based browsers and windows
+ * @see https://github.com/talkjs/country-flag-emoji-polyfill?tab=readme-ov-file
+ */
+export const managerHead = `<style>
+  body {
+    font-family: "Twemoji Country Flags", "Nunito Sans", -apple-system, ".SFNSText-Regular", "San Francisco", BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  }
+  @font-face {
+    font-family: "Twemoji Country Flags";
+    unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067, U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+    src: url('https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1/dist/TwemojiCountryFlags.woff2') format('woff2');
+    font-display: swap;
+  }
+</style>`;

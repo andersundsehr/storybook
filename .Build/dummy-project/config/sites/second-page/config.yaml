@@ -1,0 +1,21 @@
+base: 'http://web/second-page/'
+errorHandling: {  }
+languages:
+  -
+    title: English
+    enabled: true
+    languageId: 0
+    base: /en/
+    locale: en_US.UTF-8
+    navigationTitle: English
+    flag: us
+  -
+    title: French
+    enabled: true
+    languageId: 1
+    base: /fr/
+    locale: fr_FR.UTF-8
+    navigationTitle: Français
+    flag: fr
+rootPageId: 2
+routes: {  }

@@ -1,0 +1,10 @@
+vendor
+var
+test-results
+storybook-static
+playwright-report
+node_modules
+.idea
+public
+composer.lock
+package-lock.json

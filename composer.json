@@ -1,0 +1,39 @@
+{
+  "name": "andersundsehr/storybook",
+  "description": "The one and only Storybook Renderer for Fluid",
+  "license": [
+    "GPL-2.0-or-later"
+  ],
+  "type": "typo3-cms-extension",
+  "require": {
+    "typo3/cms-core": "13.4.x-dev as 13.4.15",
+    "typo3/cms-fluid": "13.4.x-dev as 13.4.15",
+    "typo3fluid/fluid": "^4.3.0"
+  },
+  "require-dev": {
+    "pluswerk/grumphp-config": "^10.1.3",
+    "saschaegerer/phpstan-typo3": "^2.0.0",
+    "ssch/typo3-rector": "^3.1.0",
+    "typo3/cms-extbase": "13.4.x-dev as 13.4.15"
+  },
+  "autoload": {
+    "psr-4": {
+      "Andersundsehr\\Storybook\\": "Classes/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true,
+      "phpro/grumphp": true,
+      "phpstan/extension-installer": true,
+      "pluswerk/grumphp-config": true,
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "storybook"
+    }
+  }
+}

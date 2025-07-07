@@ -1,0 +1,22 @@
+{
+    "name": "andersundsehr/dummy_extension",
+    "description": "Dummy extension for use in automatic testing of EXT:storybook",
+    "type": "typo3-cms-extension",
+    "license": [
+        "GPL-2.0-or-later"
+    ],
+    "require": {
+        "typo3/cms-core": "13.4.x-dev as 13.4.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "Andersundsehr\\DummyExtension\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "dummy_extension"
+        }
+    },
+    "version": "dev-"
+}

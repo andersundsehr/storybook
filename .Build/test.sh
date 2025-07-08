@@ -1,13 +1,20 @@
 #!/bin/bash
 
-# set PWD to parent directory of this script
-export PWD=$(dirname $(dirname $(realpath "$0")))
+set -x
+
+# set DOCKER_ROOT_PWD to parent directory of this script
+export DOCKER_ROOT_PWD=$(dirname $(dirname $(realpath "$0")))
+
+export APPLICATION_UID=$(id -u)
 
 export COMPOSE_PROJECT_NAME=testing-storybook
+export TYPO3_VERSION=${TYPO3_VERSION:-13.4.15}
+# not implemented yet:
+export STORYBOOK_VERSION=${STORYBOOK_VERSION:-9.0.0}
 
-#if [ -S /tmp/.X11-unix/X0 ]; then
+if [ -S /tmp/.X11-unix/X0 ]; then
   export X11_SOCKET=/tmp/.X11-unix
-#fi
+fi
 
 # if vendor is not present run testFunction composerInstall
 if [ ! -d "$PWD/.Build/dummy-project/vendor" ]; then
@@ -36,7 +43,8 @@ function testFunction {
         return
         ;;
      composerInstall)
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans typo3 su application -c 'composer update'
+        rm -rf dummy-project/vendor/
+        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans typo3 su application -c "rm -f composer.lock && composer req typo3/cms-core:^${TYPO3_VERSION}"
         return
         ;;
      storybookBuild)
@@ -56,7 +64,7 @@ function testFunction {
         return
         ;;
      watchMode)
-        watch 'rsync -av --exclude=.Build ../ dummy-project/vendor/andersundsehr/storybook/'
+        watch "rsync -av --filter=':- .gitignore' --exclude=.Build --exclude=.git ../ dummy-project/vendor/andersundsehr/storybook/"
         return
         ;;
      *)

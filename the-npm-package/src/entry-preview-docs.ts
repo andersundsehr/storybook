@@ -8,7 +8,6 @@ const sourceDecorator: DecoratorFunction<FluidRenderer> = (storyFn, storyContext
   useEffect(() => {
     const { id, args, component } = storyContext;
     const source = convertComponentToSource(component, args);
-    // console.log(source);
     addons.getChannel().emit(SNIPPET_RENDERED, { id, args, source });
   });
 

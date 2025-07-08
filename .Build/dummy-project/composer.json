@@ -19,10 +19,12 @@
   "require": {
     "andersundsehr/storybook": "@dev",
     "andersundsehr/dummy_extension": "@dev",
+    "typo3/cms-core": "^13.4.15"
+  },
+  "require-dev": {
     "helhum/dotenv-connector": "^3.1.2",
     "helhum/typo3-console": "^8.2.2"
   },
-  "minimum-stability": "dev",
   "config": {
     "allow-plugins": {
       "typo3/cms-composer-installers": true,
@@ -37,7 +39,7 @@
   },
   "scripts": {
     "post-autoload-dump": [
-      "rm -rf vendor/andersundsehr/storybook/.Build vendor/andersundsehr/storybook/the-npm-package/node_modules",
+      "rm -rf vendor/andersundsehr/storybook/.Build vendor/andersundsehr/storybook/the-npm-package/node_modules vendor/andersundsehr/storybook/the-npm-package/vendor vendor/andersundsehr/storybook/the-npm-package/var vendor/andersundsehr/storybook/the-npm-package/public",
       "typo3 database:updateschema -vvv '*'",
       "typo3 extension:setup -vvv",
       "typo3 cache:flush -vvv",

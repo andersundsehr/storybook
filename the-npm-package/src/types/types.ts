@@ -55,8 +55,6 @@ export interface FluidComponent {
   namespace: string;
   collection: string;
   argTypes: Record<string, any>;
-  /** @deprecated */
-  code: string;
 }
 
 interface FluidRenderer extends WebRenderer {

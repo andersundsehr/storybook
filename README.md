@@ -3,10 +3,6 @@
 <img alt="Love" src="./Documentation/assets/heart.svg" height="40" />  &nbsp;&nbsp;&nbsp;&nbsp;
 <img alt="Storybook" src="./Documentation/assets/logo-storybook-default.svg" height="40" />  
 
-[Getting Started](#getting-started)
-
-## Description: What does the extension do? What is it for?
-
 The TYPO3 extension `storybook` integrates Storybook into TYPO3 projects.  
 With the open-source tool Storybook, developers can develop and test UI components in isolation.  
 It provides an environment where components can be visually displayed and interactively tested.  

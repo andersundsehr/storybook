@@ -30,6 +30,10 @@ return [
             'loginLogo' => '',
             'loginLogoAlt' => '',
         ],
+        'extensionmanager' => [
+            'automaticInstallation' => '1',
+            'offlineMode' => '0',
+        ],
     ],
     'FE' => [
         'cacheHash' => [
@@ -72,7 +76,6 @@ return [
         'transport_smtp_username' => '',
     ],
     'SYS' => [
-        'trustedHostsPattern' => '.*',
         'UTF8filesystem' => true,
         'caching' => [
             'cacheConfigurations' => [
@@ -103,5 +106,6 @@ return [
             'security.system.enforceAllowedFileExtensions' => true,
         ],
         'sitename' => 'New TYPO3 site',
+        'trustedHostsPattern' => '.*',
     ],
 ];

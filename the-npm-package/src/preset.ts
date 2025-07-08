@@ -5,28 +5,16 @@ function getAbsolutePath<I extends string>(value: I): I {
   return dirname(require.resolve(join(value, 'package.json'))) as any;
 }
 
-export const core: PresetProperty<'core'> = async (config, options) => {
-  const framework = await options.presets.apply('framework');
-  // console.log('core()', {config, options, framework, presetsList: options.presetsList});
-
-  return {
-    ...config,
-    builder: getAbsolutePath('@storybook/builder-vite'),
-    renderer: getAbsolutePath('@storybook/server'),
-    disableTelemetry: true,
-  };
-};
-
 export const addons = [
   '@storybook/addon-docs',
   '@storybook/addon-a11y',
 ];
 
-// export const core: PresetProperty<'core'> = {
-//   builder: getAbsolutePath('@storybook/builder-vite'),
-//   renderer: getAbsolutePath('@storybook/server'),
-//   disableTelemetry: true,
-// };
+export const core: PresetProperty<'core'> = {
+  builder: getAbsolutePath('@storybook/builder-vite'),
+  renderer: getAbsolutePath('@storybook/server'),
+  disableTelemetry: true,
+};
 
 export const previewAnnotations: PresetProperty<'previewAnnotations'> = async (entry: Entry[] = [], options) => {
   const docsEnabled = Object.keys(await options.presets.apply('docs', {}, options)).length > 0;

@@ -1,6 +1,8 @@
-import  { url, type StoryContext } from '@andersundsehr/storybook-typo3';
+import { url, type StoryContext } from '@andersundsehr/storybook-typo3';
 
-export async function renderInTypo3(urlA: string, id: string, params: any, storyContext: StoryContext): Promise<string> {
+import { fetchWithUserRetry } from './fetchWithUserRetry.ts';
+
+export async function fetchRenderAction(urlA: string, id: string, params: any, storyContext: StoryContext): Promise<string> {
   const viewHelper = (typeof storyContext.component === 'string') ? storyContext.component : storyContext.component.fullName;
 
   const body = {
@@ -10,12 +12,9 @@ export async function renderInTypo3(urlA: string, id: string, params: any, story
     siteLanguage: storyContext.globals?.language || 'default',
   };
 
-  // console.log('renderInTypo3', { url, id, params, body, storyContext });
-
-  const response = await fetch(url + '/_storybook/render', {
+  const response = await fetchWithUserRetry(url + '/_storybook/render', {
     method: 'POST',
     body: JSON.stringify(body),
-  });
-
+  }, 'rendering component in TYPO3');
   return response.text();
 };

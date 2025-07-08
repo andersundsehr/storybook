@@ -13,7 +13,7 @@ const config: StorybookConfig = {
   },
 
   env: (envs) => ({
-    STORYBOOK_TYPO3_ENDPOINT: 'http://172.23.110.84:9999/_storybook/',
+    STORYBOOK_TYPO3_ENDPOINT: 'http://localhost:8011/_storybook/',
     ...envs, // envs given to storybook have precedence
   }),
 };

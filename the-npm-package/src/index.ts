@@ -1,6 +1,7 @@
-export * from './functions/renderInTypo3';
-export * from './functions/getPreviewConfig';
+export * from './functions/fetchRenderAction.ts';
+export * from './functions/fetchPreviewConfig.ts';
 export * from './functions/fetchComponent';
+export * from './functions/fetchWithUserRetry.ts';
 export * from './types/types';
 
 const url = (() => {

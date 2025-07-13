@@ -1,8 +1,12 @@
-export async function fetchWithUserRetry(url: string, options: RequestInit, message: string): Promise<Response> {
+export async function fetchWithUserRetry<T>(url: string, options: RequestInit, message: string, result: 'json' | 'text' = 'json'): Promise<T> {
   options = { ...options }; // Clone options to avoid mutating the original
   options.signal = options.signal || AbortSignal.timeout(5000);
   try {
-    return await fetch(url, options);
+    const response = await fetch(url, options);
+    if (result === 'text') {
+      return await response.text() as T;
+    }
+    return await response.json() as T;
   } catch (error) {
     console.error('Fetch failed:', { error });
     const retry = confirm(

@@ -33,7 +33,7 @@ services:
 #        condition: service_healthy
 
   playwright:
-    image: mcr.microsoft.com/playwright:v1.53.2-noble
+    image: mcr.microsoft.com/playwright:v1.54.1-noble
     working_dir: ${DOCKER_ROOT_PWD}/.Build/dummy-project
     volumes:
       - ${DOCKER_ROOT_PWD}:${DOCKER_ROOT_PWD}

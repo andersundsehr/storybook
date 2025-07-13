@@ -9,6 +9,6 @@
     "@andersundsehr/storybook-typo3": "file:vendor/andersundsehr/storybook/the-npm-package"
   },
   "devDependencies": {
-    "@playwright/test": "^1.53.2"
+    "@playwright/test": "^1.54.1"
   }
 }

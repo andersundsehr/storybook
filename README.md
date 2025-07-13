@@ -148,11 +148,11 @@ and a Fluid component like this:
 ```
 
 you get a Storybook interface that allows you to interactively test your component, like this:
-[![Storybook Overview](./Documentation/assets/screenshot-overview.png)](https://storybook.js.org/docs/react/get-started/introduction)
+![Storybook Overview](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-overview-1-chromium-linux.png)
 
 You can Select the site and the language in the top right corner of the Storybook interface:  
-![Site select](./Documentation/assets/screenshot-select-site.png)
-![Language select](./Documentation/assets/screenshot-select-language.png)
+![Site select](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-select-site-chromium-linux.png)
+![Language select](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-select-language-chromium-linux.png)
 
 
 - docs TODO link to hosted Storybook instance

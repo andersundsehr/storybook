@@ -24,7 +24,7 @@ final readonly class RenderJobFactory
     }
 
     /**
-     * TODO refector or at least reformat this method.
+     * TODO refactor or at least reformat this method.
      */
     public function createFromRequest(ServerRequestInterface $request): RenderJob
     {

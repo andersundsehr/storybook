@@ -38,7 +38,7 @@ export async function fetchPreviewConfig(currentGlobals?: Record<string, string>
 
   const globals = currentGlobals || getGlobalsFromUrl();
 
-  const response = await fetchWithUserRetry(
+  return await fetchWithUserRetry<PreviewConfig>(
     apiEndpoint,
     {
       method: 'POST',
@@ -49,7 +49,6 @@ export async function fetchPreviewConfig(currentGlobals?: Record<string, string>
     },
     'preview config from TYPO3',
   );
-  return response.json();
 }
 
 export function initGlobalsHandling(initalGlobalTypes: GlobalTypes) {

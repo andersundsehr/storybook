@@ -1,0 +1,36 @@
+<f:argument name="title" type="string" description="The title of the card" />
+<f:argument name="text" type="string" description="The main text of the card" />
+<f:argument name="link" type="string" description="Typolink parameter" />
+
+<a href="{f:uri.typolink(parameter: link)}" class="card">
+  <h1 class="card__title">{title}</h1>
+  <p class="card__text">{text}</p>
+  <span class="card__moreButton">more</span>
+</a>
+
+<f:asset.css identifier="card">
+  .card {
+    display: block;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card__title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .card__text {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .card__moreButton {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+</f:asset.css>

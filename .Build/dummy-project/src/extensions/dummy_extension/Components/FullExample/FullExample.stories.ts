@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj, fetchComponent } from '@andersundsehr/storybook-typo3';
 
 export default {
-  component: await fetchComponent('de:simpleExample'),
+  component: await fetchComponent('de:fullExample'),
 } satisfies Meta;
 
 export const OnlyRequired: StoryObj = {

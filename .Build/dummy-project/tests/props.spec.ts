@@ -1,18 +1,18 @@
 import { expect, test } from '@playwright/test';
 
 test('test argTypes/controlls', async ({page}) => {
-  await page.goto('/?path=/docs/extensions-dummy-extension-components-simpleexample--docs');
+  await page.goto('/?path=/docs/extensions-dummy-extension-components-fullexample--docs');
   const frame = page.locator('iframe[title="storybook-preview-iframe"]').contentFrame();
 
   const docs = frame.locator('#storybook-docs');
   await test.step('check if the component is rendered', async () => {
     await expect(docs).toContainText('Translation: The default Header Comment. EN', {timeout: 10_000}); // storybook is not the fastest
     await frame.getByRole('button', {name: 'Show code'}).first().click();
-    await expect(docs.getByText('<de:simpleExample').describe('Code Block')).toBeVisible();
-    await expect(frame.locator('#anchor--extensions-dummy-extension-components-simpleexample--only-required').first()).toMatchAriaSnapshot();
+    await expect(docs.getByText('<de:fullexample').describe('Code Block')).toBeVisible();
+    await expect(frame.locator('#anchor--extensions-dummy-extension-components-fullexample--only-required').first()).toMatchAriaSnapshot();
   });
 
-  const story = frame.locator('#story--extensions-dummy-extension-components-simpleexample--only-required--primary-inner');
+  const story = frame.locator('#story--extensions-dummy-extension-components-fullexample--only-required--primary-inner');
 
   await test.step('check if the story is rendered', async () => {
     await frame.getByPlaceholder('Edit string...').fill('this is still required');
@@ -61,9 +61,9 @@ test('test argTypes/controlls', async ({page}) => {
     await expect(docs).toContainText('{\'<b>\\\'default\\\' "Slot" Content</b>\' ->');
   });
   await test.step('stroy with slot', async () => {
-    const exampleWithSlot = frame.locator('#anchor--extensions-dummy-extension-components-simpleexample--with-slot');
+    const exampleWithSlot = frame.locator('#anchor--extensions-dummy-extension-components-fullexample--with-slot');
     await exampleWithSlot.getByRole('button', {name: 'Show code'}).click();
-    await expect(exampleWithSlot.getByText('<de:simpleExample').describe('Code Block Visible')).toBeVisible();
+    await expect(exampleWithSlot.getByText('<de:fullexample').describe('Code Block Visible')).toBeVisible();
     await expect(exampleWithSlot).toMatchAriaSnapshot();
   });
 });

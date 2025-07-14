@@ -6,5 +6,5 @@
 - paragraph: And this is some additional content in the default slot.
 - text: "Translation: The default Header Comment. EN"
 - button "Hide code"
-- text: "<html xmlns:de=\"http://typo3.org/ns/Andersundsehr/DummyExtension/ComponentCollection\" data-namespace-typo3-fluid=\"true\" > <de:simpleExample requiredArgument=\"this is required\"> <h1>This is the default slot content</h1> <p>And this is some additional content in the default slot.</p> </de:simpleExample> <!-- or --> {'<h1>This is the default slot content</h1> <p>And this is some additional content in the default slot.</p>' -> de:simpleExample(requiredArgument: 'this is required')'}"
+- text: "<html xmlns:de=\"http://typo3.org/ns/Andersundsehr/DummyExtension/ComponentCollection\" data-namespace-typo3-fluid=\"true\" > <de:fullExample requiredArgument=\"this is required\"> <h1>This is the default slot content</h1> <p>And this is some additional content in the default slot.</p> </de:fullExample> <!-- or --> {'<h1>This is the default slot content</h1> <p>And this is some additional content in the default slot.</p>' -> de:fullExample(requiredArgument: 'this is required')'}"
 - button "Copy"

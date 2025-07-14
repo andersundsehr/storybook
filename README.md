@@ -88,67 +88,60 @@ With a story file like this:
 import { type Meta, type StoryObj, fetchComponent } from '@andersundsehr/storybook-typo3';
 
 export default {
-  component: await fetchComponent('de:simpleExample'),
+  component: await fetchComponent('de:card'),
 } satisfies Meta;
 
-export const OnlyRequired: StoryObj = {
+export const Pirate: StoryObj = {
   args: {
-    requiredArgument: 'this is required',
-  },
-};
-
-export const AllArguments: StoryObj = {
-  args: {
-    requiredArgument: 'this is required',
-    optionalBool: true,
-    optionalInt: 42,
-    optionalFloat: 3.14159,
-    optionalString: 'this is optional',
-    optionalWithDefaultBool: false,
-    optionalWithDefaultInt: -42,
-    optionalWithDefaultFloat: -3.14159,
-    optionalWithDefaultString: 'this is also optional',
-  },
-};
-
-export const WithSlot: StoryObj = {
-  args: {
-    requiredArgument: 'this is required',
-    slot__default: '<h1>This is the default slot content</h1>\n<p>And this is some additional content in the default slot.</p>',
+    title: 'Yar Pirate Ipsum',
+    text: "Prow scuttle parrel provost Sail ho shrouds spirits boom mizzenmast yardarm. Pinnace holystone mizzenmast quarter crow's nest nipperkin grog yardarm hempen halter furl. Swab barque interloper chantey doubloon starboard grog black jack gangway rutters.",
+    link: 'https://www.andersundsehr.com',
   },
 };
 ````
 
 and a Fluid component like this:
 ```html
-<f:argument name="requiredArgument" type="string" description="Description of the required argument" />
-<f:argument name="optionalBool" type="bool" optional="{true}" description="this will render a checkbox in the Storybook UI" />
-<f:argument name="optionalInt" type="int" optional="{true}" description="This will render a number input in the Storybook UI" />
-<f:argument name="optionalFloat" type="float" optional="{true}" description="This will render a number input in the Storybook UI" />
-<f:argument name="optionalString" type="string" optional="{true}" description="This will render a number input in the Storybook UI" />
+<f:argument name="title" type="string" description="The title of the card" />
+<f:argument name="text" type="string" description="The main text of the card" />
+<f:argument name="link" type="string" description="Typolink parameter" />
 
-<f:argument name="optionalWithDefaultBool" type="bool" optional="{true}" default="{false}" description="this will render a checkbox in the Storybook UI" />
-<f:argument name="optionalWithDefaultInt" type="int" optional="{true}" default="42" description="This will render a number input in the Storybook UI" />
-<f:argument name="optionalWithDefaultFloat" type="float" optional="{true}" default="3.14159" description="This will render a number input in the Storybook UI" />
-<f:argument name="optionalWithDefaultString" type="string" optional="{true}" default="Default String" description="This will render a number input in the Storybook UI" />
+<a href="{f:uri.typolink(parameter: link)}" class="card">
+  <h1 class="card__title">{title}</h1>
+  <p class="card__text">{text}</p>
+  <span class="card__moreButton">more</span>
+</a>
 
-<div>
-  <f:debug inline="{true}" title="SimpleExample Component Debug">{_all}</f:debug>
-</div>
-
-<div>
-  Slot Content:
-  <f:slot/>
-</div>
-
-<div>
-  Translation:
-  <f:translate key="translationLabel" extensionName="dummy_extension"/>
-</div>
+<f:asset.css identifier="de:card">
+  .card {
+  display: block;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  color: inherit;
+  }
+  .card__title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  }
+  .card__text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  }
+  .card__moreButton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  }
+</f:asset.css>
 ```
 
 you get a Storybook interface that allows you to interactively test your component, like this:
-![Storybook Overview](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-overview-1-chromium-linux.png)
+![Storybook Overview](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/card-example-1-chromium-linux.png)
 
 You can Select the site and the language in the top right corner of the Storybook interface:  
 ![Site select](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-select-site-chromium-linux.png)

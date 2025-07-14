@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
 test('test language and site switch', async ({page}) => {
-  await page.goto('/?path=/docs/extensions-dummy-extension-components-simpleexample--docs');
+  await page.goto('/?path=/docs/extensions-dummy-extension-components-fullexample--docs');
   const frame = page
     .locator('iframe[title="storybook-preview-iframe"]')
     .contentFrame()
-    .locator('#story--extensions-dummy-extension-components-simpleexample--only-required--primary-inner');
+    .locator('#story--extensions-dummy-extension-components-fullexample--only-required--primary-inner');
 
   const toolbar = page.locator('[data-test-id="sb-preview-toolbar"]');
 

@@ -52,12 +52,13 @@ function generateOpenTag(usedArgs: string[], args: StrictArgs, component: FluidC
 
 export function convertComponentToSource(component: FluidComponent, args: StrictArgs): string {
   // TODO handle other types Object? Date? ...
+  // TODO handle transformation of args to string: if arg has (.*)__ prefix it is a virtual argument and should result in $1="{$1}" instead of $1_$2="valueof$2"
 
   let source = '';
   source += `<html\n  xmlns:${component.namespace}="http://typo3.org/ns/${component.collection.replace(/\\/g, '/')}"\n  data-namespace-typo3-fluid="true"\n>\n\n`;
 
-  const usedArgs = Object.keys(args).filter(key => !key.startsWith('slot__'));
-  const slots = Object.keys(args).filter(key => key.startsWith('slot__'))
+  const usedArgs = Object.keys(args).filter(key => !key.startsWith('slot____'));
+  const slots = Object.keys(args).filter(key => key.startsWith('slot____'))
     .filter((slot) => {
       const slotValue = args[slot];
       return slotValue !== '' && slotValue !== null && slotValue !== undefined;
@@ -74,17 +75,17 @@ export function convertComponentToSource(component: FluidComponent, args: Strict
   }
   source += '>\n';
 
-  if (slots.length === 1 && slots[0] === 'slot__default') {
+  if (slots.length === 1 && slots[0] === 'slot____default') {
     // If there is only a default slot, we can use the inline code
-    source += `  ${args.slot__default}\n`;
+    source += `  ${args.slot____default}\n`;
     source += '</' + component.fullName + '>\n';
     source += `\n<!-- or -->\n\n`;
-    source += inlineCode(usedArgs, args, component, args.slot__default ?? '');
+    source += inlineCode(usedArgs, args, component, args.slot____default ?? '');
     return source;
   }
 
   for (const slot of slots) {
-    const slotName = slot.replace('slot__', '');
+    const slotName = slot.replace('slot____', '');
     const slotValue = args[slot];
     source += `  <f:fragment name="${slotName}">${slotValue}</f:fragment>\n`;
   }

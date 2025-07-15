@@ -7,6 +7,7 @@ namespace Andersundsehr\Storybook\Action;
 use Andersundsehr\Storybook\Dto\ViewHelperName;
 use Andersundsehr\Storybook\Service\ArgTypesService;
 use Andersundsehr\Storybook\Service\ComponentCollectionService;
+use Andersundsehr\Storybook\Transformer\ArgumentTransformerFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Http\JsonResponse;
@@ -16,6 +17,7 @@ final readonly class ComponentMetaAction implements ActionInterface
     public function __construct(
         private ComponentCollectionService $componentCollectionService,
         private ArgTypesService $argTypesService,
+        private ArgumentTransformerFactory $argumentTransformerService,
     ) {
     }
 
@@ -28,7 +30,11 @@ final readonly class ComponentMetaAction implements ActionInterface
         $collection = $this->componentCollectionService->getCollection($viewHelper);
         $componentDefinition = $collection->getComponentDefinition($viewHelper->name);
 
-        $argTypes = $this->argTypesService->getArgTypes($componentDefinition);
+        $argumentTransformers = $this->argumentTransformerService->get(collection: $collection, viewHelperName: $viewHelper);
+
+        // TODO throw if argumentTransformers exists that are not defined in the componentDefinition
+
+        $argTypes = $this->argTypesService->getArgTypes($componentDefinition, $argumentTransformers);
 
         return new JsonResponse([
             'viewHelper' => $viewHelper->fullName,

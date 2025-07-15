@@ -6,6 +6,7 @@ namespace Andersundsehr\Storybook\Action;
 
 use Andersundsehr\Storybook\Factory\RenderJobFactory;
 use Andersundsehr\Storybook\Service\ComponentCollectionService;
+use Andersundsehr\Storybook\Transformer\ArgumentTransformerFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Page\AssetRenderer;
@@ -18,6 +19,7 @@ final readonly class RenderAction implements ActionInterface
         private RenderingContextFactory $renderingContextFactory,
         private RenderJobFactory $renderJobFactory,
         private AssetRenderer $assetRenderer,
+        private ArgumentTransformerFactory $argumentTransformerService,
     ) {
     }
 
@@ -32,6 +34,11 @@ final readonly class RenderAction implements ActionInterface
         $collection = $this->componentCollectionService->getCollection($renderJob->viewHelper);
         $renderingContext = $this->renderingContextFactory->create(
             request: $renderJob->renderRequest,
+        );
+
+        $argumentTransformers = $this->argumentTransformerService->get(
+            collection: $collection,
+            viewHelperName: $renderJob->viewHelper,
         );
 
         $componentRenderer = $collection->getComponentRenderer();

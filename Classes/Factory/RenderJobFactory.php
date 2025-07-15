@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Factory;
 
-use Closure;
 use Andersundsehr\Storybook\Dto\RenderJob;
 use Andersundsehr\Storybook\Dto\ViewHelperName;
+use Closure;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -22,7 +23,7 @@ use function substr;
 
 final readonly class RenderJobFactory
 {
-    public const string SLOT_PREFIX = 'slot__';
+    public const string SLOT_PREFIX = 'slot____';
 
     public function __construct(
         private SiteFinder $siteFinder,
@@ -34,6 +35,7 @@ final readonly class RenderJobFactory
 
     /**
      * TODO refactor or at least reformat this method.
+     * TODO split into 2 mehods. The one geting viewHelper, site and siteLanguage and the other one getting the arguments and slots.
      */
     public function createFromRequest(ServerRequestInterface $request): RenderJob
     {
@@ -102,7 +104,7 @@ final readonly class RenderJobFactory
         // set the global, since some ViewHelper still fallback to $GLOBALS['TYPO3_REQUEST']
         $GLOBALS['TYPO3_REQUEST'] = $renderRequest;
 
-//        $args = $this->addPreDefinedArguments($args); //TODO enable
+//        $args = $this->addPreDefinedArguments($args); //TODO add this functionality
         // TODO convert string to enum
         // TODO convert date string to DateTimeInterface/DateTimeImmutable/DateTime
         // TODO strip wrong arguments / throw Error

@@ -10,7 +10,12 @@ use Andersundsehr\Storybook\Dto\ViewHelperName;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScriptFactory;
+use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\RootlineUtility;
 
+use function file_exists;
 use function json_decode;
 use function strlen;
 use function substr;
@@ -19,7 +24,11 @@ final readonly class RenderJobFactory
 {
     public const string SLOT_PREFIX = 'slot__';
 
-    public function __construct(private SiteFinder $siteFinder)
+    public function __construct(
+        private SiteFinder $siteFinder,
+        private FrontendTypoScriptFactory $frontendTypoScriptFactory,
+        private SysTemplateRepository $sysTemplateRepository,
+    )
     {
     }
 
@@ -46,6 +55,9 @@ final readonly class RenderJobFactory
 
         $viewHelper = ($data['viewHelper'] ?? null) ?? throw new RuntimeException('Missing `viewHelper` parameter in request body', 9632741250);
         $site = $this->siteFinder->getSiteByIdentifier($data['site'] ?? throw new RuntimeException('Missing `site` parameter in request body', 2443948237));
+
+        $renderRequest = $renderRequest->withAttribute('site', $site);
+
         $siteLanguage = null;
         foreach ($site->getLanguages() as $language) {
             if ($language->getHreflang() === ($data['siteLanguage'] ?? throw new RuntimeException('Missing `siteLanguage` parameter in request body', 7817723176))) {
@@ -62,8 +74,39 @@ final readonly class RenderJobFactory
                 3709594580
             );
         }
+        $renderRequest = $renderRequest->withAttribute('language', $siteLanguage);
 
-        $renderRequest = $request->withAttribute('site', $site)->withAttribute('language', $siteLanguage);
+
+//        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class);
+//        $GLOBALS['TSFE']->initializePageRenderer($renderRequest);
+//        $renderRequest = $renderRequest->withAttribute('frontend.controller', $GLOBALS['TSFE']);
+
+        $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $site->getRootPageId())->get();
+        $sysTemplateRows = $this->sysTemplateRepository->getSysTemplateRowsByRootline($rootLine, $request);
+
+        $plainFrontendTypoScript = $this->frontendTypoScriptFactory->createSettingsAndSetupConditions($site, $sysTemplateRows, [], null);
+        $plainFrontendTypoScript = $this->frontendTypoScriptFactory->createSetupConfigOrFullSetup(
+            true,
+            $plainFrontendTypoScript,
+            $site,
+            $sysTemplateRows,
+            [],
+            '',
+            null,
+            $renderRequest
+        );
+
+
+        $renderRequest = $renderRequest->withAttribute('frontend.typoscript', $plainFrontendTypoScript);
+
+        // set the global, since some ViewHelper still fallback to $GLOBALS['TYPO3_REQUEST']
+        $GLOBALS['TYPO3_REQUEST'] = $renderRequest;
+
+//        $args = $this->addPreDefinedArguments($args); //TODO enable
+        // TODO convert string to enum
+        // TODO convert date string to DateTimeInterface/DateTimeImmutable/DateTime
+        // TODO strip wrong arguments / throw Error
+
         return new RenderJob(
             new ViewHelperName($viewHelper),
             $site,

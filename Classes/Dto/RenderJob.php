@@ -15,11 +15,9 @@ final readonly class RenderJob
         public ViewHelperName $viewHelper,
         public Site $site,
         public SiteLanguage $siteLanguage,
-        /** @var array<string, string> */
-        public array $arguments,
-        /** @var array<string, Closure():string> */
-        public array $slots,
         public ServerRequestInterface $renderRequest,
+        /** @var array<string, null|bool|int|float|string> */
+        public array $rawArgs,
     ) {
     }
 }

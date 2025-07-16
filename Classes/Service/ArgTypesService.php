@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Service;
 
-use Andersundsehr\Storybook\Factory\RenderJobFactory;
+use InvalidArgumentException;
+use Andersundsehr\Storybook\Factory\ComponentDataFactory;
 use Andersundsehr\Storybook\Transformer\ArgumentTransformers;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use UnitEnum;
+
 use function array_filter;
 use function implode;
 use function in_array;
@@ -34,13 +37,15 @@ final readonly class ArgTypesService
                         implode(', ', array_keys($transformerDefinition))
                     );
                 }
+
                 continue;
             }
+
             $argTypes[$argumentDefinition->getName()] = $this->getArgTypesForArgument($argumentDefinition);
         }
 
         foreach ($componentDefinition->getAvailableSlots() as $availableSlot) {
-            $argTypes[RenderJobFactory::SLOT_PREFIX . $availableSlot] = [
+            $argTypes[ComponentDataFactory::SLOT_PREFIX . $availableSlot] = [
                 'description' => 'Slot content for ' . $availableSlot,
                 'name' => $availableSlot,
                 'control' => [
@@ -63,6 +68,9 @@ final readonly class ArgTypesService
         return $argTypes;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getArgTypesForArgument(ArgumentDefinition $argumentDefinition, ?ArgumentDefinition $parent = null, ?string $args = null): array
     {
         $options = [];
@@ -85,22 +93,28 @@ final readonly class ArgTypesService
                 if (isset($case->value) && $case->value !== $case->name) {
                     $label .= '=' . $case->value;
                 }
-                $options[$label] = $case->name;
+
+                $options[$label] = ArgTypesService::getCaseValue($case);
             }
         } else {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Unsupported argument type "%s" for argument "%s". Only basic types are supported.',
                     $argumentDefinition->getType(),
                     $argumentDefinition->getName()
-                )
+                ),
+                2432569368
             );
+        }
+
+        $descriptionPrefix = '';
+        if ($parent) {
+            $descriptionPrefix = ('argument has type: `' . $parent->getType() . '`' . PHP_EOL . PHP_EOL);
         }
 
         return [
             // TODO add controls if possible (auto convert?) add <storybook:controls> ViewHelper for that? => maybe not needed as transformers can handle that
-            'description' => ($parent ? ('argument has type: ' . '`' . $parent->getType(
-                    ) . '`' . PHP_EOL . PHP_EOL) : '') . $argumentDefinition->getDescription(),
+            'description' => $descriptionPrefix . $argumentDefinition->getDescription(),
             'name' => $argumentDefinition->getName(),
             'control' => [
                 'type' => $controlType, // only boolean and string for now
@@ -121,5 +135,10 @@ final readonly class ArgTypesService
                 ],
             ],
         ];
+    }
+
+    public static function getCaseValue(UnitEnum $case): string
+    {
+        return "{f:constant(name: '" . $case::class . "::" . $case->name . "')}";
     }
 }

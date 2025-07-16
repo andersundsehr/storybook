@@ -6,31 +6,25 @@ namespace Andersundsehr\Storybook\Factory;
 
 use Andersundsehr\Storybook\Dto\RenderJob;
 use Andersundsehr\Storybook\Dto\ViewHelperName;
-use Closure;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use TYPO3\CMS\Core\Exception\Page\PageNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScriptFactory;
 use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
-use function file_exists;
 use function json_decode;
-use function strlen;
-use function substr;
 
 final readonly class RenderJobFactory
 {
-    public const string SLOT_PREFIX = 'slot____';
-
     public function __construct(
         private SiteFinder $siteFinder,
         private FrontendTypoScriptFactory $frontendTypoScriptFactory,
         private SysTemplateRepository $sysTemplateRepository,
-    )
-    {
+    ) {
     }
 
     /**
@@ -39,21 +33,12 @@ final readonly class RenderJobFactory
      */
     public function createFromRequest(ServerRequestInterface $request): RenderJob
     {
+        $renderRequest = $request;
         $body = $request->getBody()->getContents() ?: throw new RuntimeException('Missing request body for render', 1532676721);
+
         $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
-        $arguments = $data['arguments'] ?? throw new RuntimeException('Missing `arguments` parameter in request body', 8927775902);
-
-        $args = [];
-        /** @var array<string, Closure():string> $slots */
-        $slots = [];
-        foreach ($arguments as $key => $value) {
-            if (str_starts_with((string) $key, self::SLOT_PREFIX)) {
-                $slots[substr((string) $key, strlen(self::SLOT_PREFIX))] = static fn(): mixed => $value;
-            } else {
-                $args[$key] = $value;
-            }
-        }
+        $storybookArguments = $data['arguments'] ?? throw new RuntimeException('Missing `arguments` parameter in request body', 8927775902);
 
         $viewHelper = ($data['viewHelper'] ?? null) ?? throw new RuntimeException('Missing `viewHelper` parameter in request body', 9632741250);
         $site = $this->siteFinder->getSiteByIdentifier($data['site'] ?? throw new RuntimeException('Missing `site` parameter in request body', 2443948237));
@@ -76,6 +61,7 @@ final readonly class RenderJobFactory
                 3709594580
             );
         }
+
         $renderRequest = $renderRequest->withAttribute('language', $siteLanguage);
 
 
@@ -83,8 +69,13 @@ final readonly class RenderJobFactory
 //        $GLOBALS['TSFE']->initializePageRenderer($renderRequest);
 //        $renderRequest = $renderRequest->withAttribute('frontend.controller', $GLOBALS['TSFE']);
 
-        $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $site->getRootPageId())->get();
-        $sysTemplateRows = $this->sysTemplateRepository->getSysTemplateRowsByRootline($rootLine, $request);
+        try {
+            $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $site->getRootPageId())->get();
+            $sysTemplateRows = $this->sysTemplateRepository->getSysTemplateRowsByRootline($rootLine, $request);
+        } catch (PageNotFoundException) {
+            // if the root page is not found, we cannot assume that the database is completely empty. We can ignore the sys_template rows for now. (USE site sets they are better for that!!!)
+            $sysTemplateRows = [];
+        }
 
         $plainFrontendTypoScript = $this->frontendTypoScriptFactory->createSettingsAndSetupConditions($site, $sysTemplateRows, [], null);
         $plainFrontendTypoScript = $this->frontendTypoScriptFactory->createSetupConfigOrFullSetup(
@@ -104,18 +95,12 @@ final readonly class RenderJobFactory
         // set the global, since some ViewHelper still fallback to $GLOBALS['TYPO3_REQUEST']
         $GLOBALS['TYPO3_REQUEST'] = $renderRequest;
 
-//        $args = $this->addPreDefinedArguments($args); //TODO add this functionality
-        // TODO convert string to enum
-        // TODO convert date string to DateTimeInterface/DateTimeImmutable/DateTime
-        // TODO strip wrong arguments / throw Error
-
         return new RenderJob(
             new ViewHelperName($viewHelper),
             $site,
             $siteLanguage,
-            $args,
-            $slots,
             $renderRequest,
+            $storybookArguments,
         );
     }
 }

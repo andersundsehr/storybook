@@ -9,7 +9,7 @@ test('test argTypes/controlls', async ({page}) => {
     await expect(docs).toContainText('Translation: The default Header Comment. EN', {timeout: 10_000}); // storybook is not the fastest
     await frame.getByRole('button', {name: 'Show code'}).first().click();
     await expect(docs.getByText('<de:fullexample').describe('Code Block')).toBeVisible();
-    await expect(frame.locator('#anchor--extensions-dummy-extension-components-fullexample--only-required').first()).toMatchAriaSnapshot();
+    await expect(frame.locator('#anchor--extensions-dummy-extension-components-fullexample--only-required').first()).toMatchAriaSnapshot({name: 'story-with-only-required-arguments.aria.yml'});
   });
 
   const story = frame.locator('#story--extensions-dummy-extension-components-fullexample--only-required--primary-inner');
@@ -54,8 +54,8 @@ test('test argTypes/controlls', async ({page}) => {
 
   });
   await test.step('slot => <b>\'default\' "Slot" Content</b>', async () => {
-    await frame.locator('#set-slot__default').click();
-    await frame.locator('#control-slot__default').fill('<b>\'default\' "Slot" Content</b>');
+    await frame.locator('#set-slot____default').click();
+    await frame.locator('#control-slot____default').fill('<b>\'default\' "Slot" Content</b>');
     await expect(story).toContainText('Slot Content: \'default\' "Slot" Content');
     await expect(docs).toContainText('<b>\'default\' "Slot" Content</b>');
     await expect(docs).toContainText('{\'<b>\\\'default\\\' "Slot" Content</b>\' ->');
@@ -64,6 +64,6 @@ test('test argTypes/controlls', async ({page}) => {
     const exampleWithSlot = frame.locator('#anchor--extensions-dummy-extension-components-fullexample--with-slot');
     await exampleWithSlot.getByRole('button', {name: 'Show code'}).click();
     await expect(exampleWithSlot.getByText('<de:fullexample').describe('Code Block Visible')).toBeVisible();
-    await expect(exampleWithSlot).toMatchAriaSnapshot();
+    await expect(exampleWithSlot).toMatchAriaSnapshot({name: 'story-with-slot.aria.yml'});
   });
 });

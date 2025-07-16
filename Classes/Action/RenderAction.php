@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Action;
 
+use Andersundsehr\Storybook\Factory\ComponentDataFactory;
 use Andersundsehr\Storybook\Factory\RenderJobFactory;
 use Andersundsehr\Storybook\Service\ComponentCollectionService;
 use Andersundsehr\Storybook\Transformer\ArgumentTransformerFactory;
@@ -20,6 +21,7 @@ final readonly class RenderAction implements ActionInterface
         private RenderJobFactory $renderJobFactory,
         private AssetRenderer $assetRenderer,
         private ArgumentTransformerFactory $argumentTransformerService,
+        private ComponentDataFactory $renderVariablesService,
     ) {
     }
 
@@ -41,8 +43,12 @@ final readonly class RenderAction implements ActionInterface
             viewHelperName: $renderJob->viewHelper,
         );
 
+        $componentDefinition = $collection->getComponentDefinition($renderJob->viewHelper->name);
+
+        $variables = $this->renderVariablesService->transform($componentDefinition, $argumentTransformers, $renderJob);
+
         $componentRenderer = $collection->getComponentRenderer();
-        $html = $componentRenderer->renderComponent($renderJob->viewHelper->name, $renderJob->arguments, $renderJob->slots, $renderingContext);
+        $html = $componentRenderer->renderComponent($renderJob->viewHelper->name, $variables->arguments, $variables->slots, $renderingContext);
         $componentHtml = trim($html);
 
         $assetHtml = $this->renderAssets();

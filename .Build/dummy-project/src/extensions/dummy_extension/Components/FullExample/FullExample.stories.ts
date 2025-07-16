@@ -27,6 +27,6 @@ export const AllArguments: StoryObj = {
 export const WithSlot: StoryObj = {
   args: {
     requiredArgument: 'this is required',
-    slot__default: '<h1>This is the default slot content</h1>\n<p>And this is some additional content in the default slot.</p>',
+    slot____default: '<h1>This is the default slot content</h1>\n<p>And this is some additional content in the default slot.</p>',
   },
 };

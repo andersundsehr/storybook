@@ -32,8 +32,6 @@ final readonly class ComponentMetaAction implements ActionInterface
 
         $argumentTransformers = $this->argumentTransformerService->get(collection: $collection, viewHelperName: $viewHelper);
 
-        // TODO throw if argumentTransformers exists that are not defined in the componentDefinition
-
         $argTypes = $this->argTypesService->getArgTypes($componentDefinition, $argumentTransformers);
 
         return new JsonResponse([

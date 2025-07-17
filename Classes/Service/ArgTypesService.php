@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Service;
 
-use InvalidArgumentException;
 use Andersundsehr\Storybook\Factory\ComponentDataFactory;
 use Andersundsehr\Storybook\Transformer\ArgumentTransformers;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use InvalidArgumentException;
 use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use UnitEnum;
@@ -71,7 +71,7 @@ final readonly class ArgTypesService
     /**
      * @return array<string, mixed>
      */
-    private function getArgTypesForArgument(ArgumentDefinition $argumentDefinition, ?ArgumentDefinition $parent = null, ?string $args = null): array
+    private function getArgTypesForArgument(ArgumentDefinition $argumentDefinition, ?ArgumentDefinition $parent = null, ?string $transformerArgumentString = null): array
     {
         $options = [];
         $numberStep = null;
@@ -112,6 +112,14 @@ final readonly class ArgTypesService
             $descriptionPrefix = ('argument has type: `' . $parent->getType() . '`' . PHP_EOL . PHP_EOL);
         }
 
+        $subCategory = null;
+        if ($parent) {
+            $subCategory = $parent->getName() . '(' . $transformerArgumentString . ')';
+            if ($parent->isRequired()) {
+                $subCategory .= '*';
+            }
+        }
+
         return [
             // TODO add controls if possible (auto convert?) add <storybook:controls> ViewHelper for that? => maybe not needed as transformers can handle that
             'description' => $descriptionPrefix . $argumentDefinition->getDescription(),
@@ -129,7 +137,7 @@ final readonly class ArgTypesService
             ],
             'table' => [
                 'category' => 'argument',
-                'subcategory' => $parent ? ($parent->getName() . '(' . $args . ')') : null,
+                'subcategory' => $subCategory,
                 'defaultValue' => [
                     'summary' => $argumentDefinition->getDefaultValue(),
                 ],

@@ -93,7 +93,7 @@ final readonly class ComponentDataFactory
                 // make this work with Type[] arrays
                 // and Union types
                 throw new RuntimeException(
-                    'The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
+                    '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
                     'Please adjust the transformer or the component definition.',
                     4128088840
                 );

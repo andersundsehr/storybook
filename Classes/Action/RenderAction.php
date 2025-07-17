@@ -20,7 +20,7 @@ final readonly class RenderAction implements ActionInterface
         private RenderingContextFactory $renderingContextFactory,
         private RenderJobFactory $renderJobFactory,
         private AssetRenderer $assetRenderer,
-        private ArgumentTransformerFactory $argumentTransformerService,
+        private ArgumentTransformerFactory $argumentTransformerFactory,
         private ComponentDataFactory $renderVariablesService,
     ) {
     }
@@ -38,7 +38,7 @@ final readonly class RenderAction implements ActionInterface
             request: $renderJob->renderRequest,
         );
 
-        $argumentTransformers = $this->argumentTransformerService->get(
+        $argumentTransformers = $this->argumentTransformerFactory->get(
             collection: $collection,
             viewHelperName: $renderJob->viewHelper,
         );

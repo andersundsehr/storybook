@@ -1,0 +1,10 @@
+- heading "With Slot" [level=3]
+- text: all variables
+- group: /array\(9 items\) requiredArgument => 'this is required' \(\d+ chars\) optionalBool => NULL optionalInt => NULL optionalFloat => NULL optionalString => NULL optionalWithDefaultBool => FALSE optionalWithDefaultInt => \d+ \(integer\) optionalWithDefaultFloat => \d+\.\d+ \(double\) optionalWithDefaultString => 'Default String' \(\d+ chars\)/
+- text: "Slot Content:"
+- heading "This is the default slot content" [level=1]
+- paragraph: And this is some additional content in the default slot.
+- text: "Translation: The default Header Comment. EN"
+- button "Hide code"
+- text: "<html xmlns:de=\"http://typo3.org/ns/Andersundsehr/DummyExtension/ComponentCollection\" data-namespace-typo3-fluid=\"true\" > <de:fullExample requiredArgument=\"this is required\"> <h1>This is the default slot content</h1> <p>And this is some additional content in the default slot.</p> </de:fullExample> <!-- or --> {namespace de=Andersundsehr\\DummyExtension\\ComponentCollection} {'<h1>This is the default slot content</h1> <p>And this is some additional content in the default slot.</p>' -> de:fullExample( requiredArgument: 'this is required' )}"
+- button "Copy"

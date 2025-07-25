@@ -18,5 +18,9 @@
     "@storybook/addon-docs": "^9.0.0",
     "@storybook/addon-a11y": "^9.0.0",
     "storybook": "^9.0.0"
+  },
+  "scripts": {
+    "test": "node --test --experimental-strip-types",
+    "test:watch": "node --test --experimental-strip-types --watch"
   }
 }

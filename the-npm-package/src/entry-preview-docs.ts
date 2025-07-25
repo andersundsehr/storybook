@@ -26,5 +26,6 @@ export const parameters = {
     source: {
       type: SourceType.DYNAMIC,
     },
+    toc: true,
   },
 };

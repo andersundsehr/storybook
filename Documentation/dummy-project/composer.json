@@ -1,0 +1,52 @@
+{
+  "name": "andersundsehr/dummy-project",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "src/extensions/*",
+      "options": {
+        "reference": "none"
+      }
+    },
+    {
+      "type": "path",
+      "url": "../../",
+      "options": {
+        "symlink": false,
+        "reference": "none"
+      }
+    }
+  ],
+  "require": {
+    "andersundsehr/storybook": "@dev",
+    "andersundsehr/dummy_extension": "@dev",
+    "typo3/cms-core": "^13.4.15",
+    "typo3/cms-lowlevel": "^13.4.15"
+  },
+  "require-dev": {
+    "helhum/dotenv-connector": "^3.1.2",
+    "helhum/typo3-console": "^8.2.2",
+    "symfony/var-dumper": "^7.3"
+  },
+  "config": {
+    "allow-plugins": {
+      "typo3/cms-composer-installers": true,
+      "typo3/class-alias-loader": true,
+      "helhum/dotenv-connector": true
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "install-deprecated-typo3-index-php": false
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "rm -rf vendor/andersundsehr/storybook/Documentation vendor/andersundsehr/storybook/the-npm-package/node_modules vendor/andersundsehr/storybook/vendor vendor/andersundsehr/storybook/var vendor/andersundsehr/storybook/public",
+      "typo3 database:updateschema -vvv '*'",
+      "typo3 extension:setup -vvv",
+      "typo3 cache:flush -vvv",
+      "typo3 cache:warmup -vvv"
+    ]
+  }
+}

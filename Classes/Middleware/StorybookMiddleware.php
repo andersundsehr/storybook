@@ -12,6 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 
 use function str_starts_with;
@@ -34,8 +35,13 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         try {
             $response = $this->handle($request);
         } catch (Exception $exception) {
+            $message = '<h1>ERROR</h1><p>' . htmlspecialchars($exception->getMessage()) . '</p>';
+            if (Environment::getContext()->isDevelopment()) {
+                $message .= '<pre>' . htmlspecialchars($exception->getTraceAsString()) . '</pre>';
+            }
+
             $response = new HtmlResponse(
-                '<h1>ERROR</h1><p>' . htmlspecialchars($exception->getMessage()) . '</p>',
+                $message,
                 500,
                 ['Content-Type' => 'text/html']
             );

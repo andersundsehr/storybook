@@ -3,6 +3,8 @@
 <img alt="Love" src="./Documentation/assets/heart.svg" height="40" />  &nbsp;&nbsp;&nbsp;&nbsp;
 <img alt="Storybook" src="./Documentation/assets/logo-storybook-default.svg" height="40" />  
 
+[Getting Started](https://docs.typo3.org/p/andersundsehr/storybook)
+
 The TYPO3 extension `storybook` integrates Storybook into TYPO3 projects.  
 With the open-source tool Storybook, developers can develop and test UI components in isolation.  
 It provides an environment where components can be visually displayed and interactively tested.  
@@ -28,7 +30,7 @@ it is recommended to install storybook into your projects package.json file as w
 ```bash
 npm install --save-dev file:./vendor/andersundsehr/storybook/the-npm-package
 # or with yarn:
-yarn add @andersundsehr/storybook-typo3@file:./src/extensions/storybook/the-npm-package/
+yarn add @andersundsehr/storybook-typo3@file:./vendor/andersundsehr/storybook/the-npm-package/
 ```
 
 set framework in your `.storybook/main.ts` file to `@andersundsehr/storybook-typo3` as shown below.
@@ -147,6 +149,9 @@ You can Select the site and the language in the top right corner of the Storyboo
 ![Site select](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-select-site-chromium-linux.png)
 ![Language select](./.Build/dummy-project/tests/screenshot.spec.ts-snapshots/screenshot-select-language-chromium-linux.png)
 
+## Documentation: Where to find more information? (Links, references, tutorials)
+
+https://docs.typo3.org/p/andersundsehr/storybook
 
 - docs TODO link to hosted Storybook instance
 - docs TODO link to playwright report?
@@ -188,9 +193,6 @@ bash test.sh playwright:ui # (X11 forwarding required)
 
 ## Troubleshooting: Known issues, troubleshooting, FAQ
 
-### Complex PHP Objects
-Currently, the extension does not support complex PHP objects in the `f:argument` definition of your Fluid components.
-
 ## Changelog: Important changes and versions
 
 until now there are no breaking changes, but the extension is still in development.
@@ -206,3 +208,15 @@ This extension is licensed under the [GPL-2.0-or-later](https://spdx.org/license
 
 > We are always looking for great people to join our team!
 > https://www.andersundsehr.com/karriere/
+
+
+# TODOs
+- [ ] add storybook:transform ViewHelper to code generation?
+- [ ] add storybook:toDateTime ViewHelper to code generation!
+
+- [ ] document transformers 
+- [ ] document .transformers.php
+- [ ] document how/when to use the transformers
+- [ ] document storybook:transform ViewHelper
+- [ ] document storybook:toDateTime ViewHelper
+- [ ] document that enums and dates are automatically handled by the extension

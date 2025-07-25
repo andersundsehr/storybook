@@ -8,6 +8,7 @@ use Andersundsehr\Storybook\Dto\ViewHelperName;
 use RuntimeException;
 use TYPO3\CMS\Fluid\Core\ViewHelper\ViewHelperResolverFactoryInterface;
 use TYPO3Fluid\Fluid\Core\Component\ComponentDefinitionProviderInterface;
+use TYPO3Fluid\Fluid\Core\Component\ComponentTemplateResolverInterface;
 
 final readonly class ComponentCollectionService
 {
@@ -16,7 +17,7 @@ final readonly class ComponentCollectionService
     ) {
     }
 
-    public function getCollection(ViewHelperName $viewHelperName): ComponentDefinitionProviderInterface
+    public function getCollection(ViewHelperName $viewHelperName): ComponentDefinitionProviderInterface&ComponentTemplateResolverInterface
     {
         $viewHelperResolver = $this->viewHelperResolverFactory->create();
         $viewHelperResolverDelegate = $viewHelperResolver->getResponsibleDelegate(
@@ -34,6 +35,13 @@ final readonly class ComponentCollectionService
             throw new RuntimeException(
                 'Could not resolve component collection for ' . $viewHelperName->namespace . ':' . $viewHelperName->name . ', ViewHelperResolverDelegate does not implement ' . ComponentDefinitionProviderInterface::class,
                 3009437594
+            );
+        }
+
+        if (!$viewHelperResolverDelegate instanceof ComponentTemplateResolverInterface) {
+            throw new RuntimeException(
+                'Could not resolve component collection for ' . $viewHelperName->namespace . ':' . $viewHelperName->name . ', ViewHelperResolverDelegate does not implement ' . ComponentTemplateResolverInterface::class,
+                3009437595
             );
         }
 

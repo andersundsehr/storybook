@@ -2,11 +2,11 @@
 services:
   typo3:
     image: ghcr.io/pluswerk/php-dev:nginx-${PHP_IMAGE_VERSION:-8.4}-alpine
-    working_dir: ${DOCKER_ROOT_PWD}/.Build/dummy-project
+    working_dir: ${DOCKER_ROOT_PWD}/Documentation/dummy-project
     volumes:
       - ${DOCKER_ROOT_PWD}:${DOCKER_ROOT_PWD}
     environment:
-      WEB_DOCUMENT_ROOT: ${DOCKER_ROOT_PWD}/.Build/dummy-project/public
+      WEB_DOCUMENT_ROOT: ${DOCKER_ROOT_PWD}/Documentation/dummy-project/public
       TYPO3_CONTEXT: Development
       APPLICATION_UID: ${APPLICATION_UID:-1000}
     ports:
@@ -16,7 +16,7 @@ services:
 
 #  storybook:
 #    image: node:22
-#    working_dir: ${DOCKER_ROOT_PWD}/.Build/dummy-project
+#    working_dir: ${DOCKER_ROOT_PWD}/Documentation/dummy-project
 #    volumes:
 #      - ${DOCKER_ROOT_PWD}:${DOCKER_ROOT_PWD}
 #    command: >
@@ -34,7 +34,7 @@ services:
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.54.1-noble
-    working_dir: ${DOCKER_ROOT_PWD}/.Build/dummy-project
+    working_dir: ${DOCKER_ROOT_PWD}/Documentation/dummy-project
     volumes:
       - ${DOCKER_ROOT_PWD}:${DOCKER_ROOT_PWD}
       - ${X11_SOCKET:-./nope}:/tmp/.X11-unix

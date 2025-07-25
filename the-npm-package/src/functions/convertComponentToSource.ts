@@ -1,20 +1,26 @@
 import type { FluidComponent } from '../types/types';
 import type { StrictArgs } from 'storybook/internal/csf';
 
-function convertValueToString(key: string, argType: any, value: unknown, inline: boolean): string {
-  const innerCall = () => {
-    const valueAsString = String(value);
-    if (typeof value === 'boolean') {
+function convertValueToString(key: string, argType: { type?: { name?: 'int' } }, value: ArgumentValue, inline: boolean): string {
+  const createValue = () => {
+    if ('variableName' in value) {
+      if (inline) {
+        return value.variableName; // For inline code, just return the variable name
+      }
+      return '{' + value.variableName + '}'; // For attributes, return the variable name wrapped in curly braces
+    }
+    const valueAsString = String(value.value);
+    if (typeof value.value === 'boolean') {
       if (inline) {
         return valueAsString;
       }
       return '{' + valueAsString + '}';
     }
-    if (typeof value === 'number') {
-      if (argType.type.name === 'int') {
-        return String(Number.parseInt(valueAsString, 10)); // Convert to integer for inline code
+    if (typeof value.value === 'number') {
+      if (argType?.type?.name === 'int') {
+        return String(Number.parseInt(valueAsString, 10)); // Convert to integer
       }
-      return String(Number.parseFloat(valueAsString)); // Convert to integer for inline code
+      return String(Number.parseFloat(valueAsString)); // Convert to float
     }
     if (inline) {
       return '\'' + valueAsString.replace(/'/g, '\\\'') + '\''; // Escape single quotes for inline code
@@ -23,26 +29,41 @@ function convertValueToString(key: string, argType: any, value: unknown, inline:
   };
 
   if (inline) {
-    return key + ': ' + innerCall();
+    return key + ': ' + createValue();
   }
-  return key + '="' + innerCall() + '"';
+  return key + '="' + createValue() + '"';
 }
 
-function inlineCode(usedArgs: string[], args: StrictArgs, component: FluidComponent, defaultSlotContent?: string) {
-  const argsString = usedArgs.map(key => convertValueToString(key, component.argTypes[key], args[key], true)).join(', ');
+function inlineCode(viewHelperArguments: Arguments, component: FluidComponent, defaultSlotContent?: string) {
+  const argsStrings: string[] = Object.entries(viewHelperArguments)
+    .map(([argumentName, argumentValue]) => convertValueToString(argumentName, component.argTypes[argumentName], argumentValue, true));
+  const argsString = argsStrings.join(', ');
+
+  let source = '{';
 
   if (defaultSlotContent) {
     defaultSlotContent = defaultSlotContent.replace(/'/g, '\\\''); // Escape single quotes for inline code
-    return `{'${defaultSlotContent}' -> ${component.fullName}(${argsString})'}`;
+    source += `'${defaultSlotContent}' -> `;
+  }
+  source += `${component.fullName}(`;
+  if ((source.length + argsString.length) > 80) {
+    source += `\n  ${argsStrings.join(',\n  ')}\n`;
+  } else {
+    source += argsString;
   }
 
-  return `{${component.fullName}(${argsString})}`;
+  source += ')}';
+  return source;
 }
 
-function generateOpenTag(usedArgs: string[], args: StrictArgs, component: FluidComponent) {
-  const argStrings = usedArgs.map(key => convertValueToString(key, component.argTypes[key], args[key], false));
+function generateOpenTag(viewHelperArguments: Arguments, component: FluidComponent) {
+  const argStrings: string[] = Object.entries(viewHelperArguments)
+    .map(([argumentName, argumentValue]) => convertValueToString(argumentName, component.argTypes[argumentName], argumentValue, false));
   let argsString = argStrings.join(' ');
-  let openTag = `<${component.fullName} ${argsString}`;
+  let openTag = `<${component.fullName}`;
+  if (argsString.length > 0) {
+    openTag += ' ' + argsString;
+  }
   if (openTag.length > 80) {
     argsString = argStrings.join('\n  ');
     openTag = `<${component.fullName} \n  ${argsString}\n`;
@@ -50,42 +71,82 @@ function generateOpenTag(usedArgs: string[], args: StrictArgs, component: FluidC
   return openTag;
 }
 
+const SLOT_PREFIX = 'slot____';
+
+type ArgumentValue = {
+  value: unknown;
+} | {
+  variableName: string;
+};
+
+type Arguments = Record<string, ArgumentValue>;
+type Slots = Record<string, string>;
+interface ComponentData { viewHelperArguments: Arguments; slots: Slots }
+
+function createComponentData(component: FluidComponent, args: StrictArgs): ComponentData {
+  const viewHelperArguments: Arguments = {};
+  const slots: Slots = {};
+
+  for (const [key, value] of Object.entries(args)) {
+    if (key.startsWith(SLOT_PREFIX)) {
+      // This is a slot
+      const slotName = key.replace(SLOT_PREFIX, '');
+      if (value === null || value === undefined || value === '') {
+        continue;
+      }
+
+      slots[slotName] = value as string;
+      continue;
+    }
+
+    if (!key.includes('__')) {
+      // This is a normal argument without virtual subkey
+      viewHelperArguments[key] = { value };
+      continue;
+    }
+
+    // This is a virtual argument
+    const [variableName] = key.split('__');
+    viewHelperArguments[variableName] = { variableName };
+  }
+
+  return { viewHelperArguments, slots };
+}
+
 export function convertComponentToSource(component: FluidComponent, args: StrictArgs): string {
+  const { viewHelperArguments, slots } = createComponentData(component, args);
+
   // TODO handle other types Object? Date? ...
+  // TODO handle transformation of args to string: if arg has (.*)__ prefix it is a virtual argument and should result in $1="{$1}" instead of $1_$2="valueof$2"
+  // TODO handle enum wie value like this: {f:constant(name: '\MyVendor\MyExtension\TCA\Layout::ImageRight')}
 
   let source = '';
   source += `<html\n  xmlns:${component.namespace}="http://typo3.org/ns/${component.collection.replace(/\\/g, '/')}"\n  data-namespace-typo3-fluid="true"\n>\n\n`;
 
-  const usedArgs = Object.keys(args).filter(key => !key.startsWith('slot__'));
-  const slots = Object.keys(args).filter(key => key.startsWith('slot__'))
-    .filter((slot) => {
-      const slotValue = args[slot];
-      return slotValue !== '' && slotValue !== null && slotValue !== undefined;
-    });
+  const usedArgs: string[] = [...new Set(Object.keys(args).filter(key => !key.startsWith(SLOT_PREFIX)).map(key => key.split('__')[0]))];
 
-  source += generateOpenTag(usedArgs, args, component);
+  source += generateOpenTag(viewHelperArguments, component);
 
-  if (slots.length <= 0) {
+  if (Object.keys(slots).length <= 0) {
     source += `/>\n`;
     source += `\n<!-- or -->\n\n`;
     source += `{namespace ${component.namespace}=${component.collection}}\n\n`;
-    source += inlineCode(usedArgs, args, component);
+    source += inlineCode(viewHelperArguments, component);
     return source;
   }
   source += '>\n';
 
-  if (slots.length === 1 && slots[0] === 'slot__default') {
+  if (Object.keys(slots).length === 1 && slots.default) {
     // If there is only a default slot, we can use the inline code
-    source += `  ${args.slot__default}\n`;
+    source += `  ${slots.default}\n`;
     source += '</' + component.fullName + '>\n';
     source += `\n<!-- or -->\n\n`;
-    source += inlineCode(usedArgs, args, component, args.slot__default ?? '');
+    source += `{namespace ${component.namespace}=${component.collection}}\n\n`;
+    source += inlineCode(viewHelperArguments, component, slots.default);
     return source;
   }
 
-  for (const slot of slots) {
-    const slotName = slot.replace('slot__', '');
-    const slotValue = args[slot];
+  for (const [slotName, slotValue] of Object.entries(slots)) {
     source += `  <f:fragment name="${slotName}">${slotValue}</f:fragment>\n`;
   }
   source += '</' + component.fullName + '>';

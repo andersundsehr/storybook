@@ -1,0 +1,18 @@
+- text: all variables
+- group:
+  - text: array(6 items)
+  - group: applicationType => TYPO3\CMS\Core\Http\ApplicationTypeprototypeobject name => public 'FRONTEND' (8 chars) value => public 'frontend' (8 chars)
+  - group:
+    - text: uri => TYPO3\CMS\Core\Http\Uriprototypeobject scheme => protected 'https' (5 chars)
+    - group: /supportedSchemes => protected array\(4 items\) http => \d+ \(integer\) https => \d+ \(integer\) ws => \d+ \(integer\) wss => \d+ \(integer\)/
+    - text: /authority => protected '' \(0 chars\) userInfo => protected '' \(0 chars\) host => protected 'storybook\.andersundsehr\.com' \(\d+ chars\) port => protectedNULL path => protected '\/_storybook\/preview' \(\d+ chars\) query => protected 'nc' \(2 chars\) fragment => protected '' \(0 chars\) allowAnyScheme => protectedFALSE/
+  - group:
+    - text: websocket => TYPO3\CMS\Core\Http\Uriprototypeobject scheme => protected 'wss' (3 chars)
+    - group: /supportedSchemes => protected array\(4 items\) http => \d+ \(integer\) https => \d+ \(integer\) ws => \d+ \(integer\) wss => \d+ \(integer\)/
+    - text: /authority => protected '' \(0 chars\) userInfo => protected '' \(0 chars\) host => protected '' \(0 chars\) port => protectedNULL path => protected 'andersundsehr\.com' \(\d+ chars\) query => protected '' \(0 chars\) fragment => protected '' \(0 chars\) allowAnyScheme => protectedFALSE/
+  - text: /contextIcon => 'actions-lightbulb' \(\d+ chars\)/
+  - group:
+    - text: combineUri => TYPO3\CMS\Core\Http\Uriprototypeobject scheme => protected 'https' (5 chars)
+    - group: /supportedSchemes => protected array\(4 items\) http => \d+ \(integer\) https => \d+ \(integer\) ws => \d+ \(integer\) wss => \d+ \(integer\)/
+    - text: /authority => protected '' \(0 chars\) userInfo => protected '' \(0 chars\) host => protected 'example\.com' \(\d+ chars\) port => protectedNULL path => protected '\/index\.html' \(\d+ chars\) query => protected '' \(0 chars\) fragment => protected '' \(0 chars\) allowAnyScheme => protectedFALSE/
+  - text: /dateTimeInterface => DateTimeImmutableprototypeobject \(\d+-\d+-17T08:\d+:\d+\+\d+:\d+, \d+\)/

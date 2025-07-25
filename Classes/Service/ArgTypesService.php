@@ -6,6 +6,7 @@ namespace Andersundsehr\Storybook\Service;
 
 use Andersundsehr\Storybook\Factory\ComponentDataFactory;
 use Andersundsehr\Storybook\Transformer\ArgumentTransformers;
+use Andersundsehr\Storybook\Transformer\Transformers;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -23,18 +24,18 @@ final readonly class ArgTypesService
     /**
      * @return array<string, array<string, mixed>>
      */
-    public function getArgTypes(ComponentDefinition $componentDefinition, ArgumentTransformers $argumentTransformers): array
+    public function getArgTypes(ComponentDefinition $componentDefinition, Transformers $transformers): array
     {
         $argTypes = [];
         foreach ($componentDefinition->getArgumentDefinitions() as $argumentDefinition) {
-            $transformerDefinition = $argumentTransformers->getDefinition($argumentDefinition->getName());
+            $transformerDefinition = $transformers->arguments[$argumentDefinition->getName()] ?? null;
             if ($transformerDefinition) {
                 // If a transformer is defined, we use the transformer definition instead of the argument definition
-                foreach ($transformerDefinition as $name => $definition) {
+                foreach ($transformerDefinition->arguments as $name => $definition) {
                     $argTypes[$argumentDefinition->getName() . '__' . $name] = $this->getArgTypesForArgument(
                         $definition,
                         $argumentDefinition,
-                        implode(', ', array_keys($transformerDefinition))
+                        implode(', ', array_keys($transformerDefinition->arguments))
                     );
                 }
 

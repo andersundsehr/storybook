@@ -7,7 +7,7 @@ namespace Andersundsehr\Storybook\Factory;
 use Andersundsehr\Storybook\Dto\ComponentData;
 use Andersundsehr\Storybook\Dto\RenderJob;
 use Andersundsehr\Storybook\Service\ArgTypesService;
-use Andersundsehr\Storybook\Transformer\ArgumentTransformers;
+use Andersundsehr\Storybook\Transformer\Transformers;
 use Closure;
 use DateTime;
 use DateTimeImmutable;
@@ -17,16 +17,15 @@ use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;
 
 use function array_keys;
 use function enum_exists;
-use function get_defined_vars;
 use function in_array;
+use function is_array;
 
 final readonly class ComponentDataFactory
 {
     public const string SLOT_PREFIX = 'slot____';
 
-    public function transform(ComponentDefinition $componentDefinition, ArgumentTransformers $argumentTransformers, RenderJob $renderJob): ComponentData
+    public function transform(ComponentDefinition $componentDefinition, Transformers $transformers, RenderJob $renderJob): ComponentData
     {
-        $this->validateArgumentTransformers($componentDefinition, $argumentTransformers);
         $argumentDefinitions = $componentDefinition->getArgumentDefinitions();
 
         $args = [];
@@ -45,61 +44,30 @@ final readonly class ComponentDataFactory
                 continue;
             }
 
-            $transformerDefinition = $argumentTransformers->getDefinition($keyParts[0]) ?? throw new RuntimeException(
-                'The argument transformer for "' . $keyParts[0] . '" is not defined. Please add it to the component definition or remove it from the stories file.',
+            $transformerDefinitions = $transformers->arguments[$keyParts[0]] ?? throw new RuntimeException(
+                'Outdated stories file? The argument transformer for "' . $keyParts[0] . '" is not defined. Please add it to the component definition or remove it from the stories file.',
                 4628123687
             );
-            $transformerArgumentDefinition = $transformerDefinition[$keyParts[1]] ?? throw new RuntimeException(
-                'The argument transformer for "' . $keyParts[0] . '" does not have a definition for "' . $keyParts[1] . '". Please add it to the component definition or remove it from the stories file.',
+            $transformerArgumentDefinition = $transformerDefinitions->arguments[$keyParts[1]] ?? throw new RuntimeException(
+                'Outdated stories file? The argument transformer for "' . $keyParts[0] . '" does not have a definition for "' . $keyParts[1] . '". Please add it to the component definition or remove it from the stories file.',
                 2249880039
             );
             $targetType = $transformerArgumentDefinition->getType();
             $args[$keyParts[0]][$keyParts[1]] = $this->convertToTargetType($targetType, $value);
         }
 
-        foreach ($args as $argumentName => $argumentValue) {
-            if (!$argumentTransformers->hasTransformer($argumentName)) {
+        foreach ($args as $argumentName => $argumentValues) {
+            if (!is_array($argumentValues)) {
                 continue;
             }
 
-            $args[$argumentName] = $argumentTransformers->execute($argumentName, $argumentValue);
+            $args[$argumentName] = $transformers->execute($argumentName, $argumentValues);
         }
 
         $this->validateResult($componentDefinition, $args, $slots);
         return new ComponentData($args, $slots);
     }
 
-    private function validateArgumentTransformers(ComponentDefinition $componentDefinition, ArgumentTransformers $argumentTransformers): void
-    {
-        $argumentDefinitions = $componentDefinition->getArgumentDefinitions();
-        foreach (array_keys($argumentTransformers->arguments) as $argumentName) {
-            if (!isset($argumentDefinitions[$argumentName])) {
-                throw new RuntimeException(
-                    'The transformer for argument "' . $argumentName . '" is not present in the component. remove it from ' . $argumentTransformers->fromFile . ' or add it to the component.',
-                    1153552856
-                );
-            }
-
-            $resultType = $argumentTransformers->getResultType($argumentName);
-            $targetType = $argumentDefinitions[$argumentName]->getType();
-            if ($targetType === 'mixed') {
-                // If the target type is mixed, we don't need to validate the result type
-                continue;
-            }
-
-            if ($resultType !== $targetType) {
-                // TODO use better type comparison
-                // instanceof, is_a, etc.
-                // make this work with Type[] arrays
-                // and Union types
-                throw new RuntimeException(
-                    '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
-                    'Please adjust the transformer or the component definition.',
-                    4128088840
-                );
-            }
-        }
-    }
 
     private function convertToTargetType(string $targetType, mixed $value): mixed
     {
@@ -145,7 +113,7 @@ final readonly class ComponentDataFactory
         foreach (array_keys($args) as $argumentName) {
             if (!isset($argumentDefinitions[$argumentName])) {
                 throw new RuntimeException(
-                    'The argument "' . $argumentName . '" is not present in the component. Remove it from the stories file or add it to the component.',
+                    'Outdated stories file? The argument "' . $argumentName . '" is not present in the component. Remove it from the stories file or add it to the component.',
                     3931702316
                 );
             }
@@ -155,7 +123,7 @@ final readonly class ComponentDataFactory
         foreach (array_keys($slots) as $slotName) {
             if (!isset($availableSlots[$slotName])) {
                 throw new RuntimeException(
-                    'The slot "' . $slotName . '" is not present in the component. Remove it from the stories file or add it to the component.',
+                    'Outdated stories file? The slot "' . $slotName . '" is not present in the component. Remove it from the stories file or add it to the component.',
                     3399576233
                 );
             }

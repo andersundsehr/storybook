@@ -1,0 +1,18 @@
+- text: all variables
+- group:
+  - text: array(6 items)
+  - group: applicationType => TYPO3\CMS\Core\Http\ApplicationTypeprototypeobject name => public 'BACKEND' (7 chars) value => public 'backend' (7 chars)
+  - group:
+    - text: uri => TYPO3\CMS\Core\Http\Uriprototypeobject scheme => protected 'https' (5 chars)
+    - group: /supportedSchemes => protected array\(4 items\) http => \d+ \(integer\) https => \d+ \(integer\) ws => \d+ \(integer\) wss => \d+ \(integer\)/
+    - text: /authority => protected '' \(0 chars\) userInfo => protected '' \(0 chars\) host => protected 'storybook\.example\.com' \(\d+ chars\) port => protectedNULL path => protected '\/_storybook\/preview' \(\d+ chars\) query => protected 'ncccc' \(5 chars\) fragment => protected '' \(0 chars\) allowAnyScheme => protectedFALSE/
+  - group:
+    - text: websocket => TYPO3\CMS\Core\Http\Uriprototypeobject scheme => protected 'wss' (3 chars)
+    - group: /supportedSchemes => protected array\(4 items\) http => \d+ \(integer\) https => \d+ \(integer\) ws => \d+ \(integer\) wss => \d+ \(integer\)/
+    - text: /authority => protected '' \(0 chars\) userInfo => protected '' \(0 chars\) host => protected '' \(0 chars\) port => protectedNULL path => protected 'github\.com' \(\d+ chars\) query => protected '' \(0 chars\) fragment => protected '' \(0 chars\) allowAnyScheme => protectedFALSE/
+  - text: /contextIcon => 'actions-check' \(\d+ chars\)/
+  - group:
+    - text: combineUri => TYPO3\CMS\Core\Http\Uriprototypeobject scheme => protected 'http' (4 chars)
+    - group: /supportedSchemes => protected array\(4 items\) http => \d+ \(integer\) https => \d+ \(integer\) ws => \d+ \(integer\) wss => \d+ \(integer\)/
+    - text: /authority => protected '' \(0 chars\) userInfo => protected '' \(0 chars\) host => protected 'andersundsehr\.com' \(\d+ chars\) port => protectedNULL path => protected '\/index[\d,.]+[hmsp]+' \(\d+ chars\) query => protected 'Q' \(1 chars\) fragment => protected 'F' \(1 chars\) allowAnyScheme => protectedFALSE/
+  - text: /dateTimeInterface => DateTimeImmutableprototypeobject \(\d+-\d+-17T08:\d+:\d+\+\d+:\d+, \d+\)/

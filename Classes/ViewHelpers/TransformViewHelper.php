@@ -8,14 +8,17 @@ use Override;
 use RuntimeException;
 use Andersundsehr\Storybook\Dto\ViewHelperName;
 use Andersundsehr\Storybook\Service\ComponentCollectionService;
-use Andersundsehr\Storybook\Transformer\ArgumentTransformerFactory;
+use Andersundsehr\Storybook\Transformer\TransformersFactory;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
+/**
+ * <storybook:transform component="component:button" name="uri" arguments="{url: 'https://example.com'}" />
+ */
 final class TransformViewHelper extends AbstractViewHelper
 {
     public function __construct(
         private readonly ComponentCollectionService $componentCollectionService,
-        private readonly ArgumentTransformerFactory $argumentTransformerFactory,
+        private readonly TransformersFactory $argumentTransformerFactory,
     ) {
     }
 
@@ -37,18 +40,18 @@ final class TransformViewHelper extends AbstractViewHelper
 
         $collection = $this->componentCollectionService->getCollection($viewHelperName);
 
-        $argumentTransformers = $this->argumentTransformerFactory->get(
+        $transformers = $this->argumentTransformerFactory->get(
             collection: $collection,
             viewHelperName: $viewHelperName,
         );
 
-        if (!$argumentTransformers->hasTransformer($argumentToTransform)) {
+        if (!$transformers->has($argumentToTransform)) {
             throw new RuntimeException(
                 'The argument transformer for "' . $argumentToTransform . '" is not defined. Please add it to the component definition or remove it from the story file.',
                 1988452467
             );
         }
 
-        return $argumentTransformers->execute($argumentToTransform, $arguments);
+        return $transformers->execute($argumentToTransform, $arguments);
     }
 }

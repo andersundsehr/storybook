@@ -28,6 +28,19 @@ jobs:
       - run: composer require typo3/minimal="^${{ matrix.typo3 }}" --dev --ignore-platform-req=php+
       - run: ./vendor/bin/grumphp run --ansi
 
+  tests-documentation:
+    name: documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Test if the documentation will render without warnings
+        run: |
+          mkdir -p Documentation-GENERATED-temp \
+          && docker run --rm --pull always -v $(pwd):/project \
+             ghcr.io/typo3-documentation/render-guides:latest --config=Documentation --no-progress --minimal-test
+
   playwright:
     name: "playwright: php: ${{ matrix.php }} TYPO3: ${{ matrix.typo3 }} Storybook: ${{ matrix.storybook }}"
     runs-on: ubuntu-latest

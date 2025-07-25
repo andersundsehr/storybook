@@ -29,7 +29,6 @@ final readonly class RenderJobFactory
 
     /**
      * TODO refactor or at least reformat this method.
-     * TODO split into 2 mehods. The one geting viewHelper, site and siteLanguage and the other one getting the arguments and slots.
      */
     public function createFromRequest(ServerRequestInterface $request): RenderJob
     {

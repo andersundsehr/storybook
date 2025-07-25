@@ -7,7 +7,7 @@ namespace Andersundsehr\Storybook\Action;
 use Andersundsehr\Storybook\Factory\ComponentDataFactory;
 use Andersundsehr\Storybook\Factory\RenderJobFactory;
 use Andersundsehr\Storybook\Service\ComponentCollectionService;
-use Andersundsehr\Storybook\Transformer\ArgumentTransformerFactory;
+use Andersundsehr\Storybook\Transformer\TransformersFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Page\AssetRenderer;
@@ -20,7 +20,7 @@ final readonly class RenderAction implements ActionInterface
         private RenderingContextFactory $renderingContextFactory,
         private RenderJobFactory $renderJobFactory,
         private AssetRenderer $assetRenderer,
-        private ArgumentTransformerFactory $argumentTransformerFactory,
+        private TransformersFactory $argumentTransformerFactory,
         private ComponentDataFactory $renderVariablesService,
     ) {
     }
@@ -38,14 +38,14 @@ final readonly class RenderAction implements ActionInterface
             request: $renderJob->renderRequest,
         );
 
-        $argumentTransformers = $this->argumentTransformerFactory->get(
+        $transformers = $this->argumentTransformerFactory->get(
             collection: $collection,
             viewHelperName: $renderJob->viewHelper,
         );
 
         $componentDefinition = $collection->getComponentDefinition($renderJob->viewHelper->name);
 
-        $variables = $this->renderVariablesService->transform($componentDefinition, $argumentTransformers, $renderJob);
+        $variables = $this->renderVariablesService->transform($componentDefinition, $transformers, $renderJob);
 
         $componentRenderer = $collection->getComponentRenderer();
         $html = $componentRenderer->renderComponent($renderJob->viewHelper->name, $variables->arguments, $variables->slots, $renderingContext);

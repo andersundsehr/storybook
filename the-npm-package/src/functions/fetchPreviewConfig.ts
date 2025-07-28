@@ -1,5 +1,5 @@
 import { url } from '@andersundsehr/storybook-typo3';
-import { fetchWithUserRetry } from './fetchWithUserRetry.ts';
+import { fetchWithUserRetry } from './fetchWithUserRetry';
 import type { GlobalTypes, InputType } from 'storybook/internal/types';
 import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
 import { addons } from 'storybook/preview-api';
@@ -54,6 +54,8 @@ export async function fetchPreviewConfig(currentGlobals?: Record<string, string>
 export function initGlobalsHandling(initalGlobalTypes: GlobalTypes) {
   const channel = addons.getChannel();
   let oldGlobalTypes = initalGlobalTypes;
+
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   channel.on(GLOBALS_UPDATED, async ({ globals }: { globals: Record<string, string> }) => {
     const previewConfig = await fetchPreviewConfig(globals);
 
@@ -64,7 +66,7 @@ export function initGlobalsHandling(initalGlobalTypes: GlobalTypes) {
     let changed = false;
     for (const key in previewConfig.globalTypes) {
       const inputType: InputType = previewConfig.globalTypes[key];
-      if (!inputType.toolbar?.items?.some(item => item.value === globals[key])) {
+      if (!inputType.toolbar?.items?.some((item: { value: string }) => item.value === globals[key])) {
         newGlobals[key] = inputType.toolbar?.items?.[0]?.value || '';
         changed = true;
       }

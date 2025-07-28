@@ -8,3 +8,12 @@
 <div>
   <f:debug inline="{true}" title="all variables">{_all}</f:debug>
 </div>
+
+<div role="list">
+  <pre role="listitem">uri:               {uri}</pre>
+  <pre role="listitem">websocket:         {websocket}</pre>
+  <pre role="listitem">contextIcon:       {contextIcon}</pre>
+  <pre role="listitem">dateTimeInterface: {dateTimeInterface -> f:format.date(format: 'c')}</pre>
+  <pre role="listitem">applicationType:   {applicationType.name}</pre>
+  <pre role="listitem">combineUri:        {combineUri}</pre>
+</div>

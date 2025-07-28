@@ -1,6 +1,6 @@
 import { fetchPreviewConfig, fetchRenderAction, type StoryContext } from '@andersundsehr/storybook-typo3';
 import type { ArgTypesEnhancer, GlobalTypes } from 'storybook/internal/types';
-import { initGlobalsHandling } from './functions/fetchPreviewConfig.ts';
+import { initGlobalsHandling } from './functions/fetchPreviewConfig';
 
 const previewConfig = await fetchPreviewConfig();
 
@@ -17,5 +17,5 @@ export const parameters = {
   },
 };
 
-const enhanceArgTypes: ArgTypesEnhancer = (storyContext: StoryContext) => storyContext.component?.argTypes || {};
+const enhanceArgTypes: ArgTypesEnhancer = storyContext => storyContext.component?.argTypes || {};
 export const argTypesEnhancers: ArgTypesEnhancer[] = [enhanceArgTypes];

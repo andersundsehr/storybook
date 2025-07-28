@@ -28,9 +28,10 @@ composer require andersundsehr/storybook --dev
 
 it is recommended to install storybook into your projects package.json file as well:
 ```bash
-npm install --save-dev file:./vendor/andersundsehr/storybook/the-npm-package
-# or with yarn:
-yarn add @andersundsehr/storybook-typo3@file:./vendor/andersundsehr/storybook/the-npm-package/
+# !!! make sure to install the same version as the extension !!!
+npm install @andersundsehr/storybook-typo3 --save-dev
+# or
+yarn add @andersundsehr/storybook-typo3 --dev
 ```
 
 set framework in your `.storybook/main.ts` file to `@andersundsehr/storybook-typo3` as shown below.
@@ -44,6 +45,8 @@ After that you can run storybook with:
 # preview the production build:
 npx http-server ./storybook-static
 ```
+
+> Also See [full installation steps](https://docs.typo3.org/p/andersundsehr/storybook/latest/en-us/Installation/Index.html) in the Getting Started Guide.
 
 ## Configuration:
 
@@ -177,7 +180,7 @@ Currently there are only integration tests with [Playwright](./.Build/dummy-proj
 to run the tests you can use the following command:
 ```bash
 cd .Build/
-bash test.sh executeTests
+bash test.sh executeAll
 ```
 
 If you want to make changes to the extension, and than run the tests again you should do this:

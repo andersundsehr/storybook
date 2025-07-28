@@ -1,4 +1,4 @@
-import { type Meta, type StoryObj, fetchComponent } from '@andersundsehr/storybook-typo3';
+import { fetchComponent, type Meta, type StoryObj } from '@andersundsehr/storybook-typo3';
 
 /**
  * if your component dose not only use basic types like string, number, boolean, etc.
@@ -17,10 +17,10 @@ export default {
 
 export const transform: StoryObj = {
   args: {
-    applicationType: "{f:constant(name: 'TYPO3\\CMS\\Core\\Http\\ApplicationType::FRONTEND')}",
+    applicationType: '{f:constant(name: \'TYPO3\\CMS\\Core\\Http\\ApplicationType::FRONTEND\')}',
     uri__url: 'https://storybook.andersundsehr.com/_storybook/preview?nc',
     websocket__url: 'andersundsehr.com',
-    contextIcon__severity: "{f:constant(name: 'TYPO3\\CMS\\Core\\Type\\ContextualFeedbackSeverity::NOTICE')}",
+    contextIcon__severity: '{f:constant(name: \'TYPO3\\CMS\\Core\\Type\\ContextualFeedbackSeverity::NOTICE\')}',
     combineUri__host: 'example.com',
     combineUri__path: 'index.html',
     dateTimeInterface: 1752739200000,

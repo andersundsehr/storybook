@@ -1,4 +1,4 @@
-import test from 'node:test';
+import { test, type TestContext } from 'node:test';
 import { convertComponentToSource } from './convertComponentToSource.ts';
 import type { FluidComponent } from '../types/types.ts';
 import type { StrictArgs } from 'storybook/internal/csf';
@@ -119,7 +119,7 @@ const testCases: Record<string, TestCase> = {
 };
 
 for (const [name, { component, args, expected }] of Object.entries(testCases)) {
-  test(`convertComponentToSource - ${name}`, (t) => {
+  test(`convertComponentToSource - ${name}`, (t: TestContext) => {
     const result = convertComponentToSource(component, args);
     t.assert.strictEqual(result, expected);
   });

@@ -211,15 +211,3 @@ This extension is licensed under the [GPL-2.0-or-later](https://spdx.org/license
 
 > We are always looking for great people to join our team!
 > https://www.andersundsehr.com/karriere/
-
-
-# TODOs
-- [ ] add storybook:transform ViewHelper to code generation?
-- [ ] add storybook:toDateTime ViewHelper to code generation!
-
-- [ ] document transformers 
-- [ ] document .transformers.php
-- [ ] document how/when to use the transformers
-- [ ] document storybook:transform ViewHelper
-- [ ] document storybook:toDateTime ViewHelper
-- [ ] document that enums and dates are automatically handled by the extension

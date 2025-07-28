@@ -29,9 +29,15 @@ Installation of EXT:storybook and storybook
    ..  code-block:: bash
        :caption: install via npm
 
-       npm install --save-dev file:./vendor/andersundsehr/storybook/the-npm-package
-       # TODO @kanti publish to npm so it can be installed from there as well
-       npm install --save-dev @andersundsehr/storybook-typo3
+       npm install @andersundsehr/storybook-typo3 --save-dev
+       # or
+       yarn add @andersundsehr/storybook-typo3 --dev
+
+   ..  caution::
+       make sure you install the same version for both:
+
+       * composer `andersundsehr/storybook`
+       * npm/yarn `@andersundsehr/storybook-typo3`
 
 3. create `/.storybook/` directory
 

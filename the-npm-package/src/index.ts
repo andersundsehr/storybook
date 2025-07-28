@@ -1,7 +1,9 @@
-export * from './functions/fetchRenderAction.ts';
-export * from './functions/fetchPreviewConfig.ts';
+/// <reference types="vite/client" />
+
+export * from './functions/fetchRenderAction';
+export * from './functions/fetchPreviewConfig';
 export * from './functions/fetchComponent';
-export * from './functions/fetchWithUserRetry.ts';
+export * from './functions/fetchWithUserRetry';
 export * from './types/types';
 
 const url = (() => {

@@ -1,5 +1,7 @@
 import { dirname, join } from 'node:path';
 import type { Entry, PresetProperty } from 'storybook/internal/types';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 function getAbsolutePath<I extends string>(value: I): I {
   return dirname(require.resolve(join(value, 'package.json'))) as any;

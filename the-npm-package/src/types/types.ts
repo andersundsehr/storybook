@@ -1,4 +1,3 @@
-// export type { StoryObj } from '@storybook/server';
 import type { Args, StrictArgs } from '@storybook/server';
 import {
   AnnotatedStoryFn,
@@ -44,8 +43,8 @@ export type StorybookConfig = Omit<
   StorybookConfigBase,
   keyof StorybookConfigVite | keyof StorybookConfigFramework
 > &
-  StorybookConfigVite &
-  StorybookConfigFramework;
+StorybookConfigVite &
+StorybookConfigFramework;
 
 type StoryFnServerReturnType = any;
 

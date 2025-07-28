@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { expandAllDebug } from './expand-all.debug';
 
 test('test argTypes/controlls', async ({ page }) => {
   await page.goto('/?path=/docs/extensions-dummy-extension-components-fullexample--docs');
@@ -10,7 +9,6 @@ test('test argTypes/controlls', async ({ page }) => {
     await expect(docs).toContainText('Translation: The default Header Comment. EN', { timeout: 10_000 }); // storybook is not the fastest
     await frame.getByRole('button', { name: 'Show code' }).first().click();
     await expect(docs.getByText('<de:fullexample').describe('Code Block')).toBeVisible();
-    await expandAllDebug(frame);
     await expect(frame.locator('#anchor--extensions-dummy-extension-components-fullexample--only-required').first()).toMatchAriaSnapshot({ name: 'story-with-only-required-arguments.aria.yml' });
   });
 
@@ -65,7 +63,6 @@ test('test argTypes/controlls', async ({ page }) => {
     const exampleWithSlot = frame.locator('#anchor--extensions-dummy-extension-components-fullexample--with-slot');
     await exampleWithSlot.getByRole('button', { name: 'Show code' }).click();
     await expect(exampleWithSlot.getByText('<de:fullexample').describe('Code Block Visible')).toBeVisible();
-    await expandAllDebug(frame);
     await expect(exampleWithSlot).toMatchAriaSnapshot({ name: 'story-with-slot.aria.yml' });
   });
 });

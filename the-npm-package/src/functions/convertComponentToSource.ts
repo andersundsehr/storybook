@@ -116,10 +116,6 @@ function createComponentData(component: FluidComponent, args: StrictArgs): Compo
 export function convertComponentToSource(component: FluidComponent, args: StrictArgs): string {
   const { viewHelperArguments, slots } = createComponentData(component, args);
 
-  // TODO handle other types Object? Date? ...
-  // TODO handle transformation of args to string: if arg has (.*)__ prefix it is a virtual argument and should result in $1="{$1}" instead of $1_$2="valueof$2"
-  // TODO handle enum wie value like this: {f:constant(name: '\MyVendor\MyExtension\TCA\Layout::ImageRight')}
-
   let source = '';
   source += `<html\n  xmlns:${component.namespace}="http://typo3.org/ns/${component.collection.replace(/\\/g, '/')}"\n  data-namespace-typo3-fluid="true"\n>\n\n`;
 

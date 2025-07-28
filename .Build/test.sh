@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -euo pipefail
 #set -x
 
 # set DOCKER_ROOT_PWD to parent directory of this script
@@ -19,16 +20,11 @@ fi
 function testFunction {
   key="$1"
   case ${key} in
-     executeTests)
+     executeAll)
         testFunction composerInstall && \
+        testFunction buildTheNpmPackage && \
         testFunction storybookBuild && \
-        testFunction unitTests && \
         testFunction playwright
-        return
-        ;;
-     install)
-        testFunction composerInstall && \
-        testFunction storybookBuild
         return
         ;;
      composerInstall)
@@ -36,12 +32,13 @@ function testFunction {
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans typo3 su application -c "rm -f composer.lock && composer req typo3/cms-core:^${TYPO3_VERSION}"
         return
         ;;
-     storybookBuild)
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm i && npm run build-storybook'
+     buildTheNpmPackage)
+        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'cd ../../the-npm-package && npm ci && npm run build && npm run test'
+        testFunction copyToDev
         return
         ;;
-     unitTests)
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'cd ../../the-npm-package && npm run test'
+     storybookBuild)
+        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm ci && npm run build-storybook'
         return
         ;;
      playwright)
@@ -65,7 +62,11 @@ function testFunction {
         return
         ;;
      watchMode)
-        watch "rsync -av --delete --filter=':- .gitignore' --exclude=Documentation --exclude=.git ../ ../Documentation/dummy-project/vendor/andersundsehr/storybook/"
+        watch "bash test.sh copyToDev"
+        return
+        ;;
+     copyToDev)
+        rsync -av --delete --exclude-from=exclude-watchMode.txt ../ ../Documentation/dummy-project/vendor/andersundsehr/storybook/
         return
         ;;
      *)
@@ -75,10 +76,17 @@ function testFunction {
   esac
 }
 
+
 # if vendor is not present run testFunction composerInstall
 if [ ! -d "$DOCKER_ROOT_PWD/Documentation/dummy-project/vendor" ]; then
   echo "Vendor directory not found, running composer install..."
   testFunction composerInstall
+fi
+
+# if dist is not present run testFunction buildTheNpmPackage
+if [ ! -d "$DOCKER_ROOT_PWD/the-npm-package/dist" ]; then
+  echo "the-npm-package/dist not found building it..."
+  testFunction buildTheNpmPackage
 fi
 
 # if node_modules is not present run testFunction storybookBuild
@@ -88,4 +96,3 @@ if [ ! -d "$DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules" ]; then
 fi
 
 testFunction "${@:1}"
-        exit $?

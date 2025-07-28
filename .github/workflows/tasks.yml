@@ -85,6 +85,7 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
           cache-dependency-path: "the-npm-package"
+          registry-url: 'https://registry.npmjs.org'
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}

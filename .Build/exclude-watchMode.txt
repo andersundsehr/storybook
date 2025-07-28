@@ -1,0 +1,10 @@
+.Build
+.git
+.github
+.idea
+Documentation
+Documentation-GENERATED-temp
+public
+var
+vendor
+the-npm-package/node_modules

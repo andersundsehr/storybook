@@ -1,26 +1,52 @@
 {
   "name": "@andersundsehr/storybook-typo3",
+  "description": "The one and only Storybook Renderer for TYPO3 Fluid",
+  "keywords": [
+    "storybook",
+    "TYPO3",
+    "Fluid"
+  ],
+  "homepage": "https://github.com/andersundsehr/storybook",
+  "license": "GPL-2.0-or-later",
+  "bugs": "https://github.com/andersundsehr/storybook/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andersundsehr/storybook.git",
+    "directory": "the-npm-package"
+  },
   "type": "module",
-  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.ts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./preset": {
-      "require": "./src/preset.ts",
-      "types": "./src/preset.ts"
+      "require": "./dist/preset.js",
+      "types": "./dist/preset.d.ts"
     }
   },
   "dependencies": {
+    "@storybook/addon-a11y": "^9.0.0",
+    "@storybook/addon-docs": "^9.0.0",
     "@storybook/builder-vite": "^9.0.0",
     "@storybook/server": "^9.0.0",
-    "@storybook/addon-docs": "^9.0.0",
-    "@storybook/addon-a11y": "^9.0.0",
     "storybook": "^9.0.0"
   },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "@types/node": "^22.13.14"
+  },
   "scripts": {
-    "test": "node --test --experimental-strip-types",
-    "test:watch": "node --test --experimental-strip-types --watch"
-  }
+    "test": "node --test --experimental-strip-types **/*.test.{cts,mts,ts}",
+    "test:watch": "npm run test -- --watch",
+    "build": "tsc",
+    "prepublishOnly": "cp ../README.md . && npm run build"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }

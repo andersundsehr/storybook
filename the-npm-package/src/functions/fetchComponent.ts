@@ -1,6 +1,6 @@
 import { type FluidComponent, url } from '@andersundsehr/storybook-typo3';
 
-import { fetchWithUserRetry } from './fetchWithUserRetry.ts';
+import { fetchWithUserRetry } from './fetchWithUserRetry';
 
 interface ComponentMetaData {
   collectionClassName: string;

@@ -122,7 +122,6 @@ final readonly class ArgTypesService
         }
 
         return [
-            // TODO add controls if possible (auto convert?) add <storybook:controls> ViewHelper for that? => maybe not needed as transformers can handle that
             'description' => $descriptionPrefix . $argumentDefinition->getDescription(),
             'name' => $argumentDefinition->getName(),
             'control' => [

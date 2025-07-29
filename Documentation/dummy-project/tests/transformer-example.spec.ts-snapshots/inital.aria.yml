@@ -1,12 +1,13 @@
 - text: all variables
 - group:
-  - text: array(6 items)
+  - text: array(7 items)
   - group: applicationType => TYPO3\CMS\Core\Http\ApplicationTypeprototypeobject
   - group: uri => TYPO3\CMS\Core\Http\Uriprototypeobject
   - group: websocket => TYPO3\CMS\Core\Http\Uriprototypeobject
   - text: /contextIcon => 'actions-lightbulb' \(\d+ chars\)/
   - group: combineUri => TYPO3\CMS\Core\Http\Uriprototypeobject
   - text: /dateTimeInterface => DateTimeImmutableprototypeobject \(\d+-\d+-17T08:\d+:\d+\+\d+:\d+, \d+\)/
+  - group: transformerWithoutArguments => TYPO3\CMS\Core\Http\Uriprototypeobject
 - list:
   - listitem: "uri: https://storybook.andersundsehr.com/_storybook/preview?nc"
   - listitem: "websocket: wss:/andersundsehr.com"
@@ -14,3 +15,4 @@
   - listitem: "/dateTimeInterface: \\d+-\\d+-17T08:\\d+:\\d+\\+\\d+:\\d+/"
   - listitem: "applicationType: FRONTEND"
   - listitem: "combineUri: https://example.com/index.html"
+  - listitem: "transformerWithoutArguments: https://storybook.andersundsehr.com"

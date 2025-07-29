@@ -12,4 +12,5 @@ return new ArgumentTransformers(
     combineUri: fn(string $host, string $path, string $query = '', string $fragment = '', string $scheme = 'https'): Uri => new Uri(
         $scheme . '://' . $host . '/' . $path . '?' . $query . '#' . $fragment
     ),
+    transformerWithoutArguments: fn(): Uri => new Uri('https://storybook.andersundsehr.com'),
 );

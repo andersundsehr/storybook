@@ -56,12 +56,25 @@ final readonly class ComponentDataFactory
             $args[$keyParts[0]][$keyParts[1]] = $this->convertToTargetType($targetType, $value);
         }
 
-        foreach ($args as $argumentName => $argumentValues) {
-            if (!is_array($argumentValues)) {
-                continue;
+        foreach ($transformers->arguments as $argumentName => $argumentTransformer) {
+            $argumentValues = $args[$argumentName] ?? null;
+            if (count($argumentTransformer->arguments) === 0) {
+                $argumentValues = [];
             }
 
-            $args[$argumentName] = $transformers->execute($argumentName, $argumentValues);
+            if (!is_array($argumentValues)) {
+                if (!$argumentDefinitions[$argumentName]->isRequired()) {
+                    continue;
+                }
+
+                throw new RuntimeException(
+                    'Outdated stories file? The argument "' . $argumentName . '" is required but not present in the render job. Please update the stories file.',
+                    4134567890
+                );
+            }
+
+
+            $args[$argumentName] = $argumentTransformer->execute($argumentValues);
         }
 
         $this->validateResult($componentDefinition, $args, $slots);

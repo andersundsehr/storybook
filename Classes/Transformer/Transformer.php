@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Transformer;
 
+use ArgumentCountError;
 use Closure;
 use InvalidArgumentException;
 use ReflectionFunction;
@@ -86,6 +87,18 @@ final readonly class Transformer
      */
     public function execute(array $arguments = []): mixed
     {
-        return ($this->transformer)(...$arguments);
+        try {
+            return ($this->transformer)(...$arguments);
+        } catch (ArgumentCountError) {
+            throw new  ArgumentCountError(
+                sprintf(
+                    'Transformer "%s" expects %d arguments, but %d were given. Please check the arguments and ensure they match the transformer definition.',
+                    $this->from,
+                    count($this->arguments),
+                    count($arguments)
+                ),
+                8312565203,
+            );
+        }
     }
 }

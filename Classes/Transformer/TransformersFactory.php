@@ -18,6 +18,7 @@ use function enum_exists;
 use function file_exists;
 use function in_array;
 use function preg_replace;
+use function str_ends_with;
 
 final readonly class TransformersFactory
 {
@@ -108,9 +109,12 @@ final readonly class TransformersFactory
             }
 
             if ($resultType !== $targetType) {
+                if (str_ends_with($targetType, '[]') && $resultType === 'array') {
+                    continue;
+                }
+
                 // TODO use better type comparison
                 // instanceof, is_a, etc.
-                // make this work with Type[] arrays
                 // and Union types
                 throw new RuntimeException(
                     '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .

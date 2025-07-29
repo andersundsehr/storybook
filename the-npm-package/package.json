@@ -1,6 +1,6 @@
 {
   "name": "@andersundsehr/storybook-typo3",
-  "description": "The one and only Storybook Renderer for TYPO3 Fluid",
+  "description": "The one and only Storybook Renderer for TYPO3 Fluid Components",
   "keywords": [
     "storybook",
     "TYPO3",

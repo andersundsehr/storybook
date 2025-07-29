@@ -1,6 +1,6 @@
 {
   "name": "andersundsehr/storybook",
-  "description": "The one and only Storybook Renderer for TYPO3 Fluid",
+  "description": "The one and only Storybook Renderer for TYPO3 Fluid Components",
   "license": [
     "GPL-2.0-or-later"
   ],

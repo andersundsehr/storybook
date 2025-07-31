@@ -17,13 +17,40 @@ if [ -S /tmp/.X11-unix/X0 ]; then
   export X11_SOCKET=/tmp/.X11-unix
 fi
 
+function requireComposer {
+  # if vendor is not present run testFunction composerInstall
+  if [ ! -d "$DOCKER_ROOT_PWD/Documentation/dummy-project/vendor" ]; then
+    echo "Vendor directory not found, running composer install..."
+    testFunction composerInstall
+  fi
+}
+function requireTheNpmPackage {
+  # if dist is not present run testFunction buildTheNpmPackage
+  if [ ! -d "$DOCKER_ROOT_PWD/the-npm-package/dist" ]; then
+    echo "the-npm-package/dist not found building it..."
+    testFunction buildTheNpmPackage
+  fi
+}
+function requireStorybookBuild {
+  # if node_modules is not present run testFunction storybookBuild
+  if [ ! -d "$DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules" ]; then
+    echo "Node modules directory not found, running storybook build..."
+    testFunction storybookBuild
+  fi
+}
+function requireAll {
+  requireComposer
+  requireTheNpmPackage
+  requireStorybookBuild
+}
+
 function testFunction {
   key="$1"
   case ${key} in
      executeAll)
-        testFunction composerInstall && \
-        testFunction buildTheNpmPackage && \
-        testFunction storybookBuild && \
+        testFunction composerInstall
+        testFunction buildTheNpmPackage
+        testFunction storybookBuild
         testFunction playwright
         return
         ;;
@@ -33,46 +60,39 @@ function testFunction {
         return
         ;;
      buildTheNpmPackage)
-        # if vendor is not present run testFunction composerInstall
-        if [ ! -d "$DOCKER_ROOT_PWD/Documentation/dummy-project/vendor" ]; then
-          echo "Vendor directory not found, running composer install..."
-          testFunction composerInstall
-        fi
+        requireComposer
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'cd ../../the-npm-package && npm ci && npm run build && npm run test'
         testFunction copyToDev
         return
         ;;
      storybookBuild)
-        # if dist is not present run testFunction buildTheNpmPackage
-        if [ ! -d "$DOCKER_ROOT_PWD/the-npm-package/dist" ]; then
-          echo "the-npm-package/dist not found building it..."
-          testFunction buildTheNpmPackage
-        fi
+        requireComposer
+        requireTheNpmPackage
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm ci && npm run build-storybook'
         return
         ;;
      playwright)
-        # if node_modules is not present run testFunction storybookBuild
-        if [ ! -d "$DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules" ]; then
-          echo "Node modules directory not found, running storybook build..."
-          testFunction storybookBuild
-        fi
+        requireAll
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test ${@:2}"
         return
         ;;
      playwright:u)
+        requireAll
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test -u ${@:2}"
         return
         ;;
      playwright:ui)
+        requireAll
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test --ui ${@:2}"
         return
         ;;
      playwright:open)
+        requireAll
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm run storybook & sleep 1 ; npx playwright open http://localhost:8080/'
         return
         ;;
      playwright:codegen)
+        requireAll
         COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm run storybook & sleep 1 ; npx playwright codegen http://localhost:8080/'
         return
         ;;
@@ -85,6 +105,7 @@ function testFunction {
         return
         ;;
      docs)
+        # we need to remove all symlinks from the Documentation folder as the documentation-renderer does not support them
         rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules
         rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/public
         docker run --rm -it --pull always \

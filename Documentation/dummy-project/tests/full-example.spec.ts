@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('test argTypes/controlls', async ({ page }) => {
+test('test argTypes/controls', async ({ page }) => {
   await page.goto('/?path=/docs/extensions-dummy-extension-components-fullexample--docs');
   const frame = page.locator('iframe[title="storybook-preview-iframe"]').contentFrame();
 

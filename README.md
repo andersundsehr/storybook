@@ -1,9 +1,9 @@
 # `EXT:storybook`
-<img alt="TYPO3" src="./Documentation/assets/TYPO3-Logo-rgb.svg" height="40" /> &nbsp;&nbsp;&nbsp;&nbsp;
-<img alt="Love" src="./Documentation/assets/heart.svg" height="40" />  &nbsp;&nbsp;&nbsp;&nbsp;
+<img alt="TYPO3" src="./Documentation/assets/TYPO3-Logo-rgb.svg" height="40" />
+<img alt="Love" src="./Documentation/assets/heart.svg" height="40" />
 <img alt="Storybook" src="./Documentation/assets/logo-storybook-default.svg" height="40" />  
 
-[Getting Started](https://docs.typo3.org/permalink/andersundsehr-storybook:start)
+[Getting Started](https://docs.typo3.org/permalink/andersundsehr-storybook:start) - [TYPO3 Slack](https://typo3.slack.com/archives/C098AQPGXLM)
 
 The TYPO3 extension `storybook` integrates Storybook into TYPO3 projects.  
 With the open-source tool Storybook, developers can develop and test UI components in isolation.  

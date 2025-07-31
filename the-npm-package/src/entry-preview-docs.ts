@@ -1,6 +1,6 @@
 import { SNIPPET_RENDERED, SourceType } from 'storybook/internal/docs-tools';
 import { type FluidRenderer } from '@andersundsehr/storybook-typo3';
-import { DecoratorFunction } from 'storybook/internal/types';
+import { type DecoratorFunction } from 'storybook/internal/types';
 import { addons, useEffect } from 'storybook/preview-api';
 import { convertComponentToSource } from './functions/convertComponentToSource';
 import { error } from './functions/error';

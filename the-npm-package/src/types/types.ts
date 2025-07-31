@@ -1,5 +1,5 @@
 import type { Args, StrictArgs } from '@storybook/server';
-import {
+import type {
   AnnotatedStoryFn,
   CompatibleString,
   ComponentAnnotations,
@@ -85,4 +85,4 @@ type Loader<TArgs = StrictArgs> = LoaderFunction<FluidRenderer, TArgs>;
 type StoryContext<TArgs = StrictArgs> = StoryContext$1<FluidRenderer, TArgs>;
 type Preview = ProjectAnnotations<FluidRenderer>;
 
-export { Decorator, Loader, Meta, Preview, FluidRenderer, StoryContext, StoryFn, StoryObj };
+export type { Decorator, Loader, Meta, Preview, FluidRenderer, StoryContext, StoryFn, StoryObj };

@@ -1,6 +1,8 @@
 import { dirname, join } from 'node:path';
 import type { Entry, PresetProperty } from 'storybook/internal/types';
 import { createRequire } from 'module';
+import type { ViteFinal } from '@storybook/builder-vite';
+
 const require = createRequire(import.meta.url);
 
 function getAbsolutePath<I extends string>(value: I): I {
@@ -11,6 +13,14 @@ export const addons = [
   '@storybook/addon-docs',
   '@storybook/addon-a11y',
 ];
+
+/**
+ * We want storybook to not use your local vite config.
+ * As that is not really needed, and can cause issues or break storybook.
+ */
+export const viteFinal: ViteFinal = (config, options) => {
+  return config;
+};
 
 export const core: PresetProperty<'core'> = {
   builder: getAbsolutePath('@storybook/builder-vite'),

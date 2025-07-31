@@ -42,7 +42,8 @@ test('empty-card-story', async ({ page }) => {
       const absolutePath = el.textContent?.match(/#0\s+(.*)dummy-project\//);
       if (absolutePath) {
         // replace the absolute path with a relative path
-        el.textContent = el.textContent.replaceAll(absolutePath[1], '');
+        const newText = el.textContent?.replaceAll(absolutePath[1], '');
+        el.textContent = newText ?? '';
       }
     });
   });

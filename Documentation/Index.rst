@@ -1,8 +1,16 @@
 ..  _start:
 
 =======================
-Getting Started
+EXT:storybook - Getting Started
 =======================
+
+..  figure:: /assets/TYPO3-loves-storybook.svg
+    :alt: TYPO3
+    :target: https://typo3.org
+
+This is the Getting Started guide for the Storybook TYPO3 extension.
+It will help you to get started with Storybook and TYPO3 Fluid components.
+It is designed to be a quick introduction to the most important concepts and features of Storybook.
 
 .. tip::
 

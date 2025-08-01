@@ -7,7 +7,9 @@ namespace Andersundsehr\Storybook\Middleware;
 use Andersundsehr\Storybook\Action\ComponentMetaAction;
 use Andersundsehr\Storybook\Action\PreviewAction;
 use Andersundsehr\Storybook\Action\RenderAction;
+use Andersundsehr\Storybook\Service\KeyService;
 use Exception;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -25,6 +27,7 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         private PreviewAction $previewAction,
         private ComponentMetaAction $componentMetaAction,
         private RenderAction $renderAction,
+        private KeyService $keyService,
     ) {
     }
 
@@ -33,6 +36,8 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         if (!str_starts_with($request->getUri()->getPath(), '/_storybook/')) {
             return $handler->handle($request);
         }
+
+        $this->keyService->validateKey($request);
 
         try {
             $response = $this->handle($request);
@@ -69,12 +74,8 @@ readonly class StorybookMiddleware implements MiddlewareInterface
             $response = new JsonResponse($data, 500);
         }
 
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Methods', '*')
-            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-            ->withHeader('X-Content-Type-Options', '')
-            ->withHeader('Access-Control-Max-Age', '86400');
+        // Add CORS headers to the response, not a security risk here as this is only used if the user has the correct API key
+        return self::cors($response);
     }
 
     private function handle(ServerRequestInterface $request): ResponseInterface
@@ -92,5 +93,21 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         }
 
         return new HtmlResponse('<h1>ERROR</h1><p>Invalid route to Storybook middleware</p>', 400);
+    }
+
+    /**
+     * @template T of MessageInterface
+     * @param T $response
+     * @return T
+     */
+    public static function cors(MessageInterface $response): MessageInterface
+    {
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Methods', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Storybook-TYPO3-Key')
+            ->withHeader('X-Content-Type-Options', '')
+            ->withHeader('Access-Control-Max-Age', '86400')
+            ;
     }
 }

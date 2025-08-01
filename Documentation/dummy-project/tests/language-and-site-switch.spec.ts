@@ -15,14 +15,14 @@ test('test language and site switch', async ({ page }) => {
     await expect(frame, 'translation to use correct language').toContainText('Translation: The default Header Comment. EN');
     await page.getByRole('button', { name: '🇺🇸 English' }).click();
     await page.getByRole('button', { name: '🇩🇪 German' }).click();
-    await expect(toolbar, 'language switched Successfully').toContainText('🇩🇪 German'); // TODO how can we test this? in manual testing it works everytime
+    await expect(toolbar, 'language switched Successfully').toContainText('🇩🇪 German');
     await expect(frame, 'translation to use correct language').toContainText('Translation: Der Standard-Header-Kommentar. DE');
   });
 
   await test.step('switch to 🇦🇹 German - Austria', async () => {
     await page.getByRole('button', { name: '🇩🇪 German' }).click();
     await page.getByRole('button', { name: '🇦🇹 German - Austria' }).click();
-    await expect(toolbar, 'language switched Successfully').toContainText('🇦🇹 German - Austria'); // TODO how can we test this? in manual testing it works everytime
+    await expect(toolbar, 'language switched Successfully').toContainText('🇦🇹 German - Austria');
     await expect(frame, 'translation to use correct language').toContainText('Translation: Der Standard-Header-Kommentar. DE-AT');
   });
 
@@ -32,7 +32,7 @@ test('test language and site switch', async ({ page }) => {
 
     await page.getByRole('button', { name: '🌐 main http://web' }).click();
     await page.getByRole('button', { name: '🌐 second-page http://web/' }).click();
-    await expect(toolbar, 'site switched Successfully').toContainText('🌐 second-page http://web/second-page/'); // TODO how can we test this? in manual testing it works everytime
+    await expect(toolbar, 'site switched Successfully').toContainText('🌐 second-page http://web/second-page/');
     await expect(frame, 'translation to use correct language').toContainText('Translation: The default Header Comment. EN');
 
     await page.getByRole('button', { name: '🇺🇸 English' }).click(); // expect it switched back to English because German - Austria is not available on second-page

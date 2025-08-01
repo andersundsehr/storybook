@@ -12,25 +12,7 @@ services:
     ports:
       - "8011:80"
     healthcheck:
-      test: curl --fail-with-body http://localhost:80/_storybook/preview
-
-#  storybook:
-#    image: node:22
-#    working_dir: ${DOCKER_ROOT_PWD}/Documentation/dummy-project
-#    volumes:
-#      - ${DOCKER_ROOT_PWD}:${DOCKER_ROOT_PWD}
-#    command: >
-#      su node -c 'npm install && npm run storybook -- -h storybook'
-#    environment:
-#      NODE_ENV: development
-#      STORYBOOK_TYPO3_ENDPOINT: http://typo3:80/
-#    ports:
-#      - "6060:8080"
-#    healthcheck:
-#      test: curl --fail-with-body http://localhost:8080/index.json
-#    depends_on:
-#      typo3:
-#        condition: service_healthy
+      test: curl --fail-with-body -X OPTIONS http://localhost:80/_storybook/preview
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.54.1-noble
@@ -40,7 +22,6 @@ services:
       - ${X11_SOCKET:-./nope}:/tmp/.X11-unix
     user: '0'
     environment:
-#      STORYBOOK_ENDPOINT: http://localhost:8080
       STORYBOOK_TYPO3_ENDPOINT: http://typo3:80/
       DISPLAY: ${DISPLAY:-}
       CI: 1
@@ -48,7 +29,5 @@ services:
     ports:
       - "6060:8080"
     depends_on:
-#      storybook:
-#        condition: service_healthy
       typo3:
         condition: service_healthy

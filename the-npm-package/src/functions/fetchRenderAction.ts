@@ -19,5 +19,5 @@ export async function fetchRenderAction(urlA: string, id: string, params: unknow
   return await fetchWithUserRetry<string>(url + '/_storybook/render', {
     method: 'POST',
     body: JSON.stringify(body),
-  }, 'rendering component in TYPO3', 'text');
+  }, 'rendering component', 'text');
 };

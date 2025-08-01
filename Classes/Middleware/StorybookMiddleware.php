@@ -14,7 +14,9 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\HtmlResponse;
+use TYPO3\CMS\Core\Http\JsonResponse;
 
+use function str_replace;
 use function str_starts_with;
 
 readonly class StorybookMiddleware implements MiddlewareInterface
@@ -35,16 +37,36 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         try {
             $response = $this->handle($request);
         } catch (Exception $exception) {
-            $message = '<h1>ERROR</h1><p>' . htmlspecialchars($exception->getMessage()) . '</p>';
-            if (Environment::getContext()->isDevelopment()) {
-                $message .= '<pre>' . htmlspecialchars($exception->getTraceAsString()) . '</pre>';
-            }
+            $trace = str_replace(Environment::getProjectPath() . '/', '', $exception->getTraceAsString());
+            $trace = str_replace('): ', "):\n   ", $trace);
 
-            $response = new HtmlResponse(
-                $message,
-                500,
-                ['Content-Type' => 'text/html']
-            );
+            $html = '<div class="storybook-error"><h1>💥 Backend ERROR</h1><p>💬 ' . htmlspecialchars($exception->getMessage()) . '</p>' . PHP_EOL;
+            $html .= '🕵🏻‍♂️ Stack Trace:<br><pre>' . htmlspecialchars($trace) . '</pre>';
+            $html .= <<<'EOF'
+                <style>
+                .storybook-error {
+                  font: 16px/1.5 "Courier New", Courier, monospace;
+                }
+                .storybook-error pre {
+                  background: #292929;
+                  color: #e2e2e2;
+                  padding: 10px;
+                  overflow: auto;
+                  font: monospace;
+                }
+                </style></div>
+                EOF;
+            $html = str_replace(Environment::getProjectPath() . '/', '', $html);
+            $message = $exception->getMessage();
+            $message = str_replace(Environment::getProjectPath() . '/', '', $message);
+
+            $data = [
+                'errorType' => 'extension',
+                'reason' => $message,
+                'stackTrace' => $trace,
+                'errorHtml' => $html,
+            ];
+            $response = new JsonResponse($data, 500);
         }
 
         return $response
@@ -69,6 +91,6 @@ readonly class StorybookMiddleware implements MiddlewareInterface
             return $this->renderAction->__invoke($request);
         }
 
-        return new HtmlResponse('<h1>ERROR</h1><p>Invalid request to Storybook middleware</p>', 400);
+        return new HtmlResponse('<h1>ERROR</h1><p>Invalid route to Storybook middleware</p>', 400);
     }
 }

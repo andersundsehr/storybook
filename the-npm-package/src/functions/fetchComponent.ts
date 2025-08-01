@@ -17,7 +17,7 @@ export async function fetchComponent(component: string): Promise<FluidComponent>
   const data = await fetchWithUserRetry<ComponentMetaData>(
     url + '/_storybook/componentMeta?viewHelper=' + component,
     {},
-    'metadata for component `' + component + '` from TYPO3',
+    'metadata for component `' + component + '`',
   );
 
   return {

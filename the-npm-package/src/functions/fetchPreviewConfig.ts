@@ -47,7 +47,7 @@ export async function fetchPreviewConfig(currentGlobals?: Record<string, string>
       },
       body: JSON.stringify({ globals }),
     },
-    'preview config from TYPO3',
+    'preview config',
   );
 }
 

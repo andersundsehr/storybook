@@ -48,76 +48,79 @@ function testFunction {
   key="$1"
   case ${key} in
      executeAll)
-        testFunction composerInstall
-        testFunction buildTheNpmPackage
-        testFunction storybookBuild
-        testFunction playwright
-        return
-        ;;
+       testFunction composerInstall
+       testFunction buildTheNpmPackage
+       testFunction storybookBuild
+       testFunction playwright
+       return
+       ;;
      composerInstall)
-        rm -rf dummy-project/vendor/
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans typo3 su application -c "rm -f composer.lock && composer req typo3/cms-core:^${TYPO3_VERSION}"
-        return
-        ;;
+       rm -rf dummy-project/vendor/
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans typo3 su application -c "rm -f composer.lock && composer req typo3/cms-core:^${TYPO3_VERSION}"
+       return
+       ;;
      buildTheNpmPackage)
-        requireComposer
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'cd ../../the-npm-package && npm ci && npm run build && npm run test'
-        testFunction copyToDev
-        return
-        ;;
+       requireComposer
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans --no-deps playwright su ubuntu -c 'cd ../../the-npm-package && npm ci && npm run build && npm run test'
+       testFunction copyToDev
+       return
+       ;;
      storybookBuild)
-        requireComposer
-        requireTheNpmPackage
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm ci && npm run build-storybook'
-        return
-        ;;
+       requireComposer
+       requireTheNpmPackage
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans --no-deps playwright su ubuntu -c 'npm ci && npm run build-storybook'
+       return
+       ;;
      playwright)
-        requireAll
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test ${@:2}"
-        return
-        ;;
+       requireAll
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test ${@:2}"
+       return
+       ;;
      playwright:u)
-        requireAll
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test -u ${@:2}"
-        return
-        ;;
+       requireAll
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test -u ${@:2}"
+       return
+       ;;
      playwright:ui)
-        requireAll
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test --ui ${@:2}"
-        return
-        ;;
+       requireAll
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c "npx playwright test --ui ${@:2}"
+       return
+       ;;
      playwright:open)
-        requireAll
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm run storybook & sleep 1 ; npx playwright open http://localhost:8080/'
-        return
-        ;;
+       requireAll
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm run storybook & sleep 1 ; npx playwright open http://localhost:8080/'
+       return
+       ;;
      playwright:codegen)
-        requireAll
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm run storybook & sleep 1 ; npx playwright codegen http://localhost:8080/'
-        return
-        ;;
+       requireAll
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans playwright su ubuntu -c 'npm run storybook & sleep 1 ; npx playwright codegen http://localhost:8080/'
+       return
+       ;;
      watchMode)
-        watch "bash test.sh copyToDev"
-        return
-        ;;
+       bash -c "COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run -T --rm --remove-orphans --no-deps playwright su ubuntu -c 'cd ../../the-npm-package && npm ci && ./node_modules/.bin/tsc --watch'" &
+       TSC_PID=$!
+       trap "kill $TSC_PID" SIGHUP SIGINT SIGQUIT SIGABRT
+       watch 'bash test.sh copyToDev'
+       return
+       ;;
      copyToDev)
-        rsync -av --delete --exclude-from=exclude-watchMode.txt ../ ../Documentation/dummy-project/vendor/andersundsehr/storybook/
-        return
-        ;;
+       rsync -av --delete --exclude-from=exclude-watchMode.txt ../ ../Documentation/dummy-project/vendor/andersundsehr/storybook/
+       return
+       ;;
      docs)
-        # we need to remove all symlinks from the Documentation folder as the documentation-renderer does not support them
-        rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules
-        rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/public
-        docker run --rm -it --pull always \
-          -v "$DOCKER_ROOT_PWD/Documentation:/project/Documentation" \
-          -v "$DOCKER_ROOT_PWD/Documentation-GENERATED-temp:/project/Documentation-GENERATED-temp" \
-          -p 5173:5173 ghcr.io/garvinhicking/typo3-documentation-browsersync:latest
-        return
-        ;;
+       # we need to remove all symlinks from the Documentation folder as the documentation-renderer does not support them
+       rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules
+       rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/public
+       docker run --rm -it --pull always \
+         -v "$DOCKER_ROOT_PWD/Documentation:/project/Documentation" \
+         -v "$DOCKER_ROOT_PWD/Documentation-GENERATED-temp:/project/Documentation-GENERATED-temp" \
+         -p 5173:5173 ghcr.io/garvinhicking/typo3-documentation-browsersync:latest
+       return
+       ;;
      *)
-        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml "${@:1}"
-        return
-        ;;
+       COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml "${@:1}"
+       return
+       ;;
   esac
 }
 

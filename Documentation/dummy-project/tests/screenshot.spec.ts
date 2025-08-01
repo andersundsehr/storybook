@@ -23,6 +23,7 @@ test('card-example', async ({ page }) => {
 
   await expect(page).toHaveScreenshot({ maxDiffPixelRatio: 0.01 });
 });
+
 test('empty-card-story', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
 

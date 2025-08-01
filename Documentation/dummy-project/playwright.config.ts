@@ -56,5 +56,7 @@ export default defineConfig({
     command: 'npm run storybook',
     url: 'http://localhost:8080',
     reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });

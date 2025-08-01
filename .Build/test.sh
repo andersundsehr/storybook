@@ -107,6 +107,11 @@ function testFunction {
        rsync -av --delete --exclude-from=exclude-watchMode.txt ../ ../Documentation/dummy-project/vendor/andersundsehr/storybook/
        return
        ;;
+     reset)
+       DP_PATH="$DOCKER_ROOT_PWD/Documentation/dummy-project"
+       rm -rf $DP_PATH/node_modules/ $DP_PATH/vendor/ $DP_PATH/var/ $DP_PATH/public/ $DP_PATH/storybook-static/ $DP_PATH/test-results/ $DP_PATH/playwright-report/ $DP_PATH/composer.lock $DP_PATH/.env
+       return
+       ;;
      docs)
        # we need to remove all symlinks from the Documentation folder as the documentation-renderer does not support them
        rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules

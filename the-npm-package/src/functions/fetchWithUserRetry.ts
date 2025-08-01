@@ -19,12 +19,21 @@ In any case we should get the error in json so we can handle it in the frontend 
 Sometimes it can still be text/html so we need to handle that as well.
  */
 
+
 type PossibleResults = string | object;
+
+let updatableApiKey = import.meta.env.STORYBOOK_TYPO3_KEY;
 
 export async function fetchWithUserRetry<T extends PossibleResults>(url: string, options: RequestInit, message: string, resultType: 'json' | 'text' = 'json'): Promise<T> {
   try {
     options = { ...options }; // Clone options to avoid mutating the original
     options.signal = options.signal || AbortSignal.timeout(5000);
+    options.headers = {
+      ...options.headers,
+      'Content-Type': 'application/json',
+      Accept: resultType === 'json' ? 'application/json' : 'text/html',
+      'X-Storybook-TYPO3-Key': updatableApiKey,
+    };
     const response = await fetch(url, options);
     if (!response.ok) {
       return retry<T>(response, url, options, message, resultType);
@@ -40,9 +49,23 @@ async function retry<T extends PossibleResults>(errorOrResponse: unknown, url: s
   const errorType = await getErrorExplanation(errorOrResponse);
   let exception = errorOrResponse instanceof Error ? errorOrResponse : undefined;
 
+  let retry = false;
   let confirmationMessage = '';
 
-  if (errorType.errorType === 'network') {
+  if (errorType.errorType === 'key') {
+    retry = true;
+    confirmationMessage = `🔐 ${errorType.message}\n\n`
+      + `🔗 url: ${url}\n\n`
+      + `💬 Please insert the correct API key:\ncan be found in the .env file:\n\n`;
+
+    // if there was no api key, it will be set into the .env from the php code automatically
+    // we wait 1 second to give HMR time to update the .env file and reload the page, otherwise the user has to provide the key
+    if(!updatableApiKey) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    updatableApiKey = prompt(confirmationMessage) || updatableApiKey;
+  } else if (errorType.errorType === 'network') {
     confirmationMessage = `🛜+🚫 A network error occurred while fetching ${message} from TYPO3:\n\n`
       + `💬 ${errorType.message}\n\n`
       + `⏩ Please check your network connection and try again.\n\n`
@@ -72,7 +95,9 @@ async function retry<T extends PossibleResults>(errorOrResponse: unknown, url: s
 
   confirmationMessage = confirmationMessage.trim();
   confirmationMessage = confirmationMessage.length > 700 ? confirmationMessage.substring(0, 700 - 3) + '\n…' : confirmationMessage;
-  const retry = confirm(confirmationMessage + '\n\n Do you want to retry 🔄❓');
+  if (!retry) {
+    retry = confirm(confirmationMessage + '\n\n Do you want to retry 🔄❓');
+  }
   if (retry) {
     options.signal = undefined;
     return fetchWithUserRetry<T>(url, options, message, resultType);
@@ -91,6 +116,10 @@ type ErrorResult =
       message: string;
     }
   | {
+      errorType: 'key';
+      message: string;
+    }
+  | {
       errorType: 'extension';
       errorHtml: string;
       reason: string;
@@ -101,11 +130,23 @@ async function getErrorExplanation(errorOrResponse: unknown): Promise<ErrorResul
   if (errorOrResponse instanceof Response) {
     let text: string | undefined = undefined;
 
+
     try {
       text = await errorOrResponse.text();
     } catch (e) {
+    }
+
+    if (errorOrResponse.status === 401) {
+      return {
+        errorType: 'key',
+        message: text || `The API key is not set or invalid. Maybe you only need to restart Storybook?`,
+      };
+    }
+
+    if (!text) {
       return {
         errorType: 'unknown',
+        statusCode: errorOrResponse.status,
         message: `Failed to read response from TYPO3: ${errorOrResponse.status}\n ${errorOrResponse.statusText}`,
       };
     }
@@ -126,6 +167,7 @@ async function getErrorExplanation(errorOrResponse: unknown): Promise<ErrorResul
 
     return {
       errorType: 'unknown',
+      statusCode: errorOrResponse.status,
       message: `Received an unexpected response from TYPO3: ${errorOrResponse.status}\n ${text}`,
     };
   }

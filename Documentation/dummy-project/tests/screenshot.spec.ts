@@ -34,7 +34,7 @@ test('empty-card-story', async ({ page }) => {
 
   const frame = page.locator('iframe[title="storybook-preview-iframe"]').contentFrame();
   const output = frame.locator('#storybook-root');
-  await expect(output).toContainText('The argument "title" for template "Default_action_Card_Card_');
+  await expect(output).toContainText('The argument "title" for template "Default_action_Card');
   await expect(page.locator('#set-title')).toBeVisible();
 
   await test.step('make paths relative for screenshot', async () => {

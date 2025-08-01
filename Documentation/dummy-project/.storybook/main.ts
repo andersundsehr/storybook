@@ -12,9 +12,12 @@ const config: StorybookConfig = {
     disableTelemetry: true,
   },
 
-  env: (envs) => ({
-    STORYBOOK_TYPO3_ENDPOINT: 'http://localhost:8011/_storybook/',
-    ...envs, // envs given to storybook have precedence
-  }),
+  env: (envs) => {
+    return {
+      STORYBOOK_TYPO3_ENDPOINT: 'http://localhost:8011/_storybook/',
+      // do not set your api key here! https://www.deployhq.com/blog/protecting-your-api-keys-a-quick-guide
+      ...envs, // envs given to storybook have precedence
+    };
+  },
 };
 export default config;

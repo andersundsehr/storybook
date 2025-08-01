@@ -50,6 +50,10 @@ jobs:
       - uses: actions/checkout@v4
       - run: chmod -R 0777 ..
       - run: bash test.sh playwright
+      - run: bash test.sh logs typo3 --tail=100
+        if: always()
+      - run: docker inspect --format "{{json .State.Health }}" testing-storybook-typo3-1 | jq '.Log[].Output'
+        if: always()
       - uses: actions/upload-artifact@v4
         if: always()
         with:

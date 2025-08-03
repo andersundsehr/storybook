@@ -1,11 +1,15 @@
 # `EXT:storybook`
-<img alt="TYPO3" src="./Documentation/assets/TYPO3-Logo-rgb.svg" height="40" />
-<img alt="Love" src="./Documentation/assets/heart.svg" height="40" />
-<img alt="Storybook" src="./Documentation/assets/logo-storybook-default.svg" height="40" />  
 
-[Getting Started](https://docs.typo3.org/permalink/andersundsehr-storybook:start) - [TYPO3 Slack](https://typo3.slack.com/archives/C098AQPGXLM)
+![TYPO3 Version](https://img.shields.io/packagist/dependency-v/andersundsehr/storybook/typo3%2Fcms-core?style=flat-square&logo=typo3&color=orange)
+![Storybook Version](https://img.shields.io/npm/dependency-version/%40andersundsehr%2Fstorybook-typo3/storybook?style=flat-square&logo=storybook&color=%23ff4785)
+![PHP Version](https://img.shields.io/packagist/dependency-v/andersundsehr/storybook/php?style=flat-square&logo=php)
+![Static Badge](https://img.shields.io/badge/Slack-TYPO3-orange?style=flat-square&logoColor=orange&logo=slack&link=https%3A%2F%2Ftypo3.slack.com%2Farchives%2FC098AQPGXLM)
 
-The TYPO3 extension `storybook` integrates Storybook into TYPO3 projects.  
+![TYPO3 loves storybook](./Documentation/assets/TYPO3-loves-storybook.svg)
+
+[Getting Started](https://docs.typo3.org/permalink/andersundsehr-storybook:start)
+
+The TYPO3 extension [storybook](https://storybook.js.org/) integrates Storybook into TYPO3 projects.  
 With the open-source tool Storybook, developers can develop and test UI components in isolation.  
 It provides an environment where components can be visually displayed and interactively tested.  
 The extension facilitates the development of TYPO3 frontend components by enabling seamless integration of Storybook into TYPO3.  

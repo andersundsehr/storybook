@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\JsonResponse;
@@ -41,7 +42,7 @@ readonly class StorybookMiddleware implements MiddlewareInterface
 
         try {
             $response = $this->handle($request);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $trace = str_replace(Environment::getProjectPath() . '/', '', $exception->getTraceAsString());
             $trace = str_replace('): ', "):\n   ", $trace);
 
@@ -58,6 +59,7 @@ readonly class StorybookMiddleware implements MiddlewareInterface
                   padding: 10px;
                   overflow: auto;
                   font: monospace;
+                  max-height: 250px;
                 }
                 </style></div>
                 EOF;

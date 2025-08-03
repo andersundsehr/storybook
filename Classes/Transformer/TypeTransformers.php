@@ -6,6 +6,9 @@ namespace Andersundsehr\Storybook\Transformer;
 
 use RuntimeException;
 
+use function array_column;
+use function array_keys;
+use function is_a;
 use const PHP_INT_MIN;
 
 /**
@@ -67,15 +70,42 @@ final class TypeTransformers
 
     public function has(string $returnType): bool
     {
-        return isset($this->handlers[$returnType]);
+        return (bool)$this->getInternal($returnType);
     }
 
     public function get(string $returnType): Transformer
     {
-        return $this->handlers[$returnType] ?? throw new RuntimeException(
+        return $this->getInternal($returnType) ?? throw new RuntimeException(
             'No transformer found for return type "' . $returnType . '".',
             1988452468
         );
+    }
+
+    private function getInternal(string $returnType): ?Transformer
+    {
+        if(isset($this->handlers[$returnType])){
+            return $this->handlers[$returnType];
+        }
+        $maxPriority = PHP_INT_MIN;
+        $matched = null;
+        foreach ($this->handlers as $type => $transformer) {
+            // if the requested type is contained in the transformers type, we can use it to transform
+            if (!is_a($type, $returnType, true)) {
+                continue;
+            }
+
+            $priority = $this->priorities[$type] ?? throw new RuntimeException('No priority found for transformer of type "' . $type . '".');
+            if ($priority < $maxPriority) {
+                continue;
+            }
+            $maxPriority = $priority;
+            $matched = $transformer;
+        }
+
+        // cache the result:
+        $this->handlers[$returnType] = $matched;
+        $this->priorities[$returnType] = $maxPriority;
+        return $matched;
     }
 
     /**
@@ -85,7 +115,7 @@ final class TypeTransformers
     {
         return [
             'raw' => $this->configuration,
-            'used' => $this->handlers
+            'used' => $this->handlers,
         ];
     }
 }

@@ -9,6 +9,7 @@ use RuntimeException;
 use function array_column;
 use function array_keys;
 use function is_a;
+
 use const PHP_INT_MIN;
 
 /**
@@ -60,9 +61,7 @@ final class TypeTransformers
         }
 
         $this->handlers[$returnType] = Transformer::fromCallable(
-            $handler->{
-            $method
-            }(...),
+            $handler->{$method}(...),
             $handler::class . '->' . $method
         );
         $this->priorities[$returnType] = $priority;
@@ -83,9 +82,10 @@ final class TypeTransformers
 
     private function getInternal(string $returnType): ?Transformer
     {
-        if(isset($this->handlers[$returnType])){
+        if (isset($this->handlers[$returnType])) {
             return $this->handlers[$returnType];
         }
+
         $maxPriority = PHP_INT_MIN;
         $matched = null;
         foreach ($this->handlers as $type => $transformer) {
@@ -94,17 +94,21 @@ final class TypeTransformers
                 continue;
             }
 
-            $priority = $this->priorities[$type] ?? throw new RuntimeException('No priority found for transformer of type "' . $type . '".');
+            $priority = $this->priorities[$type] ?? throw new RuntimeException('No priority found for transformer of type "' . $type . '".', 6799603216);
             if ($priority < $maxPriority) {
                 continue;
             }
+
             $maxPriority = $priority;
             $matched = $transformer;
         }
 
-        // cache the result:
-        $this->handlers[$returnType] = $matched;
-        $this->priorities[$returnType] = $maxPriority;
+        if ($matched) {
+            // cache the result:
+            $this->handlers[$returnType] = $matched;
+            $this->priorities[$returnType] = $maxPriority;
+        }
+
         return $matched;
     }
 

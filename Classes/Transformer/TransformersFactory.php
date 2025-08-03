@@ -117,16 +117,12 @@ final readonly class TransformersFactory
 
                 $targetIsClass = class_exists($targetType) || interface_exists($targetType);
                 $resultIsClass = class_exists($resultType) || interface_exists($resultType);
-                if($targetIsClass && $resultIsClass) {
-                    // If the target type is a class, interface or enum, we can check if the result type is a subclass or implementation
-                    if (is_a($resultType, $targetType, true)) {
-                        continue;
-                    }
+                // If the target type is a class, interface or enum, we can check if the result type is a subclass or implementation
+                if ($targetIsClass && $resultIsClass && is_a($resultType, $targetType, true)) {
+                    continue;
                 }
 
                 // TODO use better type comparison
-                // instanceof, is_a, etc.
-                // and Union types
                 throw new RuntimeException(
                     '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
                     'Please adjust the transformer or the component definition.',

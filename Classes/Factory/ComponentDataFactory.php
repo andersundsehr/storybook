@@ -15,6 +15,7 @@ use DateTimeInterface;
 use RuntimeException;
 use TYPO3Fluid\Fluid\Core\Component\ComponentDefinition;
 
+use function array_filter;
 use function array_keys;
 use function enum_exists;
 use function in_array;
@@ -58,7 +59,8 @@ final readonly class ComponentDataFactory
 
         foreach ($transformers->arguments as $argumentName => $argumentTransformer) {
             $argumentValues = $args[$argumentName] ?? null;
-            if (count($argumentTransformer->arguments) === 0) {
+            $requiredArgumentCount = count(array_filter($argumentTransformer->arguments, static fn($arg): bool => $arg->isRequired()));
+            if ($requiredArgumentCount === 0) {
                 $argumentValues = [];
             }
 

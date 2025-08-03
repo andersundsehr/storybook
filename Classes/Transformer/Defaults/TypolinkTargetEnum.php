@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Transformer\Defaults;
 
-enum TypolinkTargetEnum:string
+enum TypolinkTargetEnum: string
 {
     case none = '';
     case _blank = '_blank';

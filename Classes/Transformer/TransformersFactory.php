@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Andersundsehr\Storybook\Transformer;
 
 use Andersundsehr\Storybook\Dto\ViewHelperName;
+use Andersundsehr\Storybook\Transformer\TransformerFactory;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -24,7 +25,7 @@ use function str_starts_with;
 
 final readonly class TransformersFactory
 {
-    public function __construct(private TypeTransformers $typeTransformers)
+    public function __construct(private TypeTransformers $typeTransformers, private TransformerFactory $transformerFactory)
     {
     }
 
@@ -66,7 +67,7 @@ final readonly class TransformersFactory
 
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
             if (isset($argumentTransformers->arguments[$argumentName])) {
-                $transformers[$argumentName] = Transformer::fromCallable($argumentTransformers->arguments[$argumentName], $pdaFileName . ':' . $argumentName);
+                $transformers[$argumentName] = $this->transformerFactory->fromCallable($argumentTransformers->arguments[$argumentName], $pdaFileName . ':' . $argumentName);
                 continue;
             }
 

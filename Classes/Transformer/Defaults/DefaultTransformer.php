@@ -25,7 +25,7 @@ final readonly class DefaultTransformer
 
     // Transformer also matches to FileInterface or AbstractFile
     #[TypeTransformer(priority: 100)]
-    public function file(string $extPath = 'EXT:storybook/Resources/Public/Icons/Extension.svg'): File
+    public function file(string $extPath): File
     {
         $file = $this->resourceFactory->retrieveFileOrFolderObject($extPath);
         if (!$file instanceof File) {

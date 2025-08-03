@@ -1,12 +1,18 @@
 - text: all variables
 - group:
-  - text: array(7 items)
+  - text: /array\(\d+ items\)/
   - group: applicationType => TYPO3\CMS\Core\Http\ApplicationTypeprototypeobject
   - group: uri => TYPO3\CMS\Core\Http\Uriprototypeobject
   - group: websocket => TYPO3\CMS\Core\Http\Uriprototypeobject
   - text: /contextIcon => 'actions-check' \(\d+ chars\)/
   - group: combineUri => TYPO3\CMS\Core\Http\Uriprototypeobject
   - text: /dateTimeInterface => DateTimeImmutableprototypeobject \(\d+-\d+-17T08:\d+:\d+\+\d+:\d+, \d+\)/
+  - group: typolink => TYPO3\CMS\Core\LinkHandling\TypolinkParameterprototypeobject
+  - group: file => TYPO3\CMS\Core\Resource\Fileprototypeobject
+  - link "fileInterface => TYPO3\\CMS\\Core\\Resource\\Fileprototypeobjectsee above":
+    - /url: "/#[a-f0-9]{32}/"
+  - link "fileWithDefault => TYPO3\\CMS\\Core\\Resource\\Fileprototypeobjectsee above":
+    - /url: "/#[a-f0-9]{32}/"
   - group: transformerWithoutArguments => TYPO3\CMS\Core\Http\Uriprototypeobject
 - list:
   - listitem: "uri: https://storybook.example.com/_storybook/preview?ncccc"
@@ -16,3 +22,8 @@
   - listitem: "applicationType: BACKEND"
   - listitem: "/combineUri: http:\\/\\/andersundsehr\\.com\\/index[\\d,.]+[hmsp]+\\?Q#F/"
   - listitem: "transformerWithoutArguments: https://storybook.andersundsehr.com"
+  - listitem: "typolink: http://github.com/andersundsehr/storybook-typo3"
+  - listitem: "file: /_assets/9fdfd946e1cc26a2df6cb911c5be1856/Icons/Extension.svg"
+  - listitem: "fileInterface: /_assets/9fdfd946e1cc26a2df6cb911c5be1856/Icons/Extension.svg"
+  - listitem: "fileWithDefault: /_assets/9fdfd946e1cc26a2df6cb911c5be1856/Icons/Extension.svg"
+- img "Extension.svg"

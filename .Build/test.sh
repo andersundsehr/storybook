@@ -116,6 +116,7 @@ function testFunction {
        # we need to remove all symlinks from the Documentation folder as the documentation-renderer does not support them
        rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/node_modules
        rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/public
+       rm -rf $DOCKER_ROOT_PWD/Documentation/dummy-project/vendor
        docker run --rm -it --pull always \
          -v "$DOCKER_ROOT_PWD/Documentation:/project/Documentation" \
          -v "$DOCKER_ROOT_PWD/Documentation-GENERATED-temp:/project/Documentation-GENERATED-temp" \

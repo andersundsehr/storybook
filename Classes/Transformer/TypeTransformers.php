@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Transformer;
 
+use Andersundsehr\Storybook\Transformer\TransformerFactory;
 use RuntimeException;
 
 use function array_column;
@@ -35,6 +36,10 @@ final class TypeTransformers
      */
     private array $priorities = [];
 
+    public function __construct(private readonly TransformerFactory $transformerFactory)
+    {
+    }
+
     /**
      * called from Symfony DI configuration
      */
@@ -60,7 +65,7 @@ final class TypeTransformers
             return;
         }
 
-        $this->handlers[$returnType] = Transformer::fromCallable(
+        $this->handlers[$returnType] = $this->transformerFactory->fromCallable(
             $handler->{$method}(...),
             $handler::class . '->' . $method
         );

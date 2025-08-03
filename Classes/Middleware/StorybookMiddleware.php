@@ -9,6 +9,7 @@ use Andersundsehr\Storybook\Action\PreviewAction;
 use Andersundsehr\Storybook\Action\RenderAction;
 use Andersundsehr\Storybook\Service\KeyService;
 use Exception;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,9 +26,7 @@ use function str_starts_with;
 readonly class StorybookMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private PreviewAction $previewAction,
-        private ComponentMetaAction $componentMetaAction,
-        private RenderAction $renderAction,
+        private ContainerInterface $container,
         private KeyService $keyService,
     ) {
     }
@@ -83,15 +82,18 @@ readonly class StorybookMiddleware implements MiddlewareInterface
     private function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($request->getUri()->getPath() === '/_storybook/componentMeta') {
-            return $this->componentMetaAction->__invoke($request);
+            $componentMetaAction = $this->container->get(ComponentMetaAction::class);
+            return $componentMetaAction->__invoke($request);
         }
 
         if ($request->getUri()->getPath() === '/_storybook/preview') {
-            return $this->previewAction->__invoke($request);
+            $previewAction = $this->container->get(PreviewAction::class);
+            return $previewAction->__invoke($request);
         }
 
         if ($request->getUri()->getPath() === '/_storybook/render') {
-            return $this->renderAction->__invoke($request);
+            $renderAction = $this->container->get(RenderAction::class);
+            return $renderAction->__invoke($request);
         }
 
         return new HtmlResponse('<h1>ERROR</h1><p>Invalid route to Storybook middleware</p>', 400);

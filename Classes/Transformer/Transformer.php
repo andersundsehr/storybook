@@ -26,60 +26,11 @@ final readonly class Transformer
          * @var array<string, ArgumentDefinition>
          */
         public array $arguments,
+        /**
+         * @var array<string, object>
+         */
+        public array $services,
     ) {
-    }
-
-    public static function fromCallable(callable $transformer, string $from): self
-    {
-        $closure = Closure::fromCallable($transformer);
-        $arguments = [];
-        $reflection = new ReflectionFunction($closure);
-        $returnType = $reflection->getReturnType()?->__toString() ?? throw new InvalidArgumentException(
-            sprintf(
-                'Transformer "%s" does not have a return type defined. Please define a return type for the transformer.',
-                $reflection->getName(),
-            ),
-            5914437566,
-        );
-        foreach ($reflection->getParameters() as $parameter) {
-            $subArgType = $parameter->getType()?->__toString() ?? throw new InvalidArgumentException(
-                sprintf(
-                    'Argument "%s" for Transformer "%s" does not have a type defined. Please define a type for the argument.',
-                    $parameter->getName(),
-                    $from,
-                ),
-                9068759075,
-            );
-            $argumentName = $parameter->getName();
-            if (!in_array($subArgType, ['string', 'int', 'float', 'bool']) && !class_exists($subArgType) && !enum_exists($subArgType)) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Invalid type "%s" for argument "%s" in function "%s". Only basic types are allowed.',
-                        $subArgType,
-                        $argumentName,
-                        $reflection->getName()
-                    ),
-                    9211667105,
-                );
-            }
-
-            $descriptionPrefix = 'transformed via: ' . (str_contains($from, '::') ? '`' . $from . '`' : '`*.transformer.php`') . ' - ';
-            $arguments[$argumentName] = new ArgumentDefinition(
-                name: $argumentName,
-                type: $subArgType,
-                description: $descriptionPrefix . ' virtual argument has type:',
-                required: !$parameter->isOptional(),
-                defaultValue: $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null,
-                escape: false,
-            );
-        }
-
-        return new self(
-            transformer: $closure,
-            from: $from,
-            returnType: $returnType,
-            arguments: $arguments
-        );
     }
 
     /**
@@ -88,7 +39,7 @@ final readonly class Transformer
     public function execute(array $arguments = []): mixed
     {
         try {
-            return ($this->transformer)(...$arguments);
+            return ($this->transformer)(...$this->services, ...$arguments);
         } catch (ArgumentCountError) {
             throw new  ArgumentCountError(
                 sprintf(

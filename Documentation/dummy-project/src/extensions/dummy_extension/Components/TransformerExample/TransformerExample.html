@@ -5,6 +5,10 @@
 <f:argument optional="{true}" name="applicationType" type="TYPO3\CMS\Core\Http\ApplicationType" description="ApplicationType is an Enum, so it will be rendered as a select and auto converted" />
 <f:argument optional="{true}" name="combineUri" type="TYPO3\CMS\Core\Http\Uri" description="you can combine multiple parameters to create your Object" />
 <f:argument optional="{true}" name="transformerWithoutArguments" type="TYPO3\CMS\Core\Http\Uri" description="you can have zero arguments for your transformers" />
+<f:argument optional="{true}" name="typolink" type="TYPO3\CMS\Core\LinkHandling\TypolinkParameter" description="you can use TypolinkParameter to create links" />
+<f:argument optional="{true}" name="file" type="TYPO3\CMS\Core\Resource\File" description="you can use EXT: files for your" />
+<f:argument optional="{true}" name="fileInterface" type="TYPO3\CMS\Core\Resource\File" description="you should use FileInterface where possible" />
+<f:argument optional="{true}" name="fileWithDefault" type="TYPO3\CMS\Core\Resource\File" description="you can use DI in your argument transformers" />
 
 <div>
   <f:debug inline="{true}" title="all variables">{_all}</f:debug>
@@ -18,4 +22,12 @@
   <pre role="listitem">applicationType:             {applicationType.name}</pre>
   <pre role="listitem">combineUri:                  {combineUri}</pre>
   <pre role="listitem">transformerWithoutArguments: {transformerWithoutArguments}</pre>
+  <pre role="listitem">typolink:                    {f:uri.typolink(parameter: typolink)}</pre>
+  <pre role="listitem">file:                        {file.identifier}</pre>
+  <pre role="listitem">fileInterface:               {fileInterface.identifier}</pre>
+  <pre role="listitem">fileWithDefault:             {fileWithDefault.identifier}</pre>
 </div>
+
+<f:if condition="{fileWithDefault}">
+  <f:image image="{fileWithDefault}" alt="{fileWithDefault.name}" maxHeight="40" />
+</f:if>

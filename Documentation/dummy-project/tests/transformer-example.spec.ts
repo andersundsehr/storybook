@@ -23,6 +23,14 @@ test('test argTypes/controls', async ({ page }) => {
     await contentFrame.locator('#control-combineUri__fragment').fill('F');
     await contentFrame.locator('#set-combineUri__scheme').click();
     await contentFrame.locator('#control-combineUri__scheme').fill('http');
+    await contentFrame.locator('#set-typolink__url').click();
+    await contentFrame.locator('#control-typolink__url').fill('github.com/andersundsehr/storybook-typo3');
+    await contentFrame.locator('#set-file__extPath').click();
+    await contentFrame.locator('#control-file__extPath').fill('EXT:storybook/Resources/Public/Icons/Extension.svg');
+    await contentFrame.locator('#set-fileInterface__extPath').click();
+    await contentFrame.locator('#control-fileInterface__extPath').fill('EXT:storybook/Resources/Public/Icons/Extension.svg');
+    await contentFrame.locator('#set-fileWithDefault__extPath').click();
+    await contentFrame.locator('#control-fileWithDefault__extPath').fill('EXT:storybook/Resources/Public/Icons/Extension.svg');
   });
 
   await expect(output).toMatchAriaSnapshot({ name: 'after-changes.aria.yml' });

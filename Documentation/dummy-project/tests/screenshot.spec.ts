@@ -82,7 +82,7 @@ test('screenshot-overview', async ({ page }) => {
 });
 
 test('transformer-example', async ({ page }) => {
-  await page.setViewportSize({ width: 1850, height: 2800 });
+  await page.setViewportSize({ width: 1850, height: 4550 });
 
   await page.goto('/?path=/docs/extensions-dummy-extension-components-transformerexample--docs');
   await removeUpgradeNotification(page);

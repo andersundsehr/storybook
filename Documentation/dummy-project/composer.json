@@ -46,7 +46,8 @@
       "typo3 database:updateschema -vvv '*'",
       "typo3 extension:setup -vvv",
       "typo3 cache:flush -vvv",
-      "typo3 cache:warmup -vvv"
+      "typo3 cache:warmup -vvv",
+      "typo3 install:fixfolderstructure -vvv"
     ]
   }
 }

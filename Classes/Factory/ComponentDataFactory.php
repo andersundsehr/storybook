@@ -60,7 +60,7 @@ final readonly class ComponentDataFactory
         foreach ($transformers->arguments as $argumentName => $argumentTransformer) {
             $argumentValues = $args[$argumentName] ?? null;
             $requiredArgumentCount = count(array_filter($argumentTransformer->arguments, static fn($arg): bool => $arg->isRequired()));
-            if ($requiredArgumentCount === 0) {
+            if ($argumentValues === null && $requiredArgumentCount === 0) {
                 $argumentValues = [];
             }
 

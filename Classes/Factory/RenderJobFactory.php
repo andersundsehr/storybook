@@ -100,6 +100,11 @@ final readonly class RenderJobFactory
             $siteLanguage,
             $renderRequest,
             $storybookArguments,
+            $site->getBase()
+                ->withPath('')
+                ->withFragment('')
+                ->withQuery('')
+                ->__toString()
         );
     }
 }

@@ -14,11 +14,13 @@ use TYPO3Fluid\Fluid\Core\Component\ComponentDefinitionProviderInterface;
 use TYPO3Fluid\Fluid\Core\Component\ComponentTemplateResolverInterface;
 
 use function array_keys;
+use function class_exists;
 use function enum_exists;
 use function file_exists;
 use function in_array;
 use function preg_replace;
 use function str_ends_with;
+use function str_starts_with;
 
 final readonly class TransformersFactory
 {
@@ -113,9 +115,14 @@ final readonly class TransformersFactory
                     continue;
                 }
 
+                $targetIsClass = class_exists($targetType) || interface_exists($targetType);
+                $resultIsClass = class_exists($resultType) || interface_exists($resultType);
+                // If the target type is a class, interface or enum, we can check if the result type is a subclass or implementation
+                if ($targetIsClass && $resultIsClass && is_a($resultType, $targetType, true)) {
+                    continue;
+                }
+
                 // TODO use better type comparison
-                // instanceof, is_a, etc.
-                // and Union types
                 throw new RuntimeException(
                     '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
                     'Please adjust the transformer or the component definition.',

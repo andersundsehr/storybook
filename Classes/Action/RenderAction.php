@@ -52,8 +52,9 @@ final readonly class RenderAction implements ActionInterface
         $componentHtml = trim($html);
 
         $assetHtml = $this->renderAssets();
+        $base = '<base href="' . $renderJob->baseHref . '"/>';
 
-        return new HtmlResponse(implode(PHP_EOL, array_filter([$componentHtml, $assetHtml])));
+        return new HtmlResponse(implode(PHP_EOL, array_filter([$base, $componentHtml, $assetHtml])));
     }
 
     private function renderAssets(): string

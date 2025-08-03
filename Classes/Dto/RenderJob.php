@@ -18,6 +18,7 @@ final readonly class RenderJob
         public ServerRequestInterface $renderRequest,
         /** @var array<string, null|bool|int|float|string> */
         public array $rawArgs,
+        public string $baseHref,
     ) {
     }
 }

@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\JsonResponse;
@@ -41,11 +42,11 @@ readonly class StorybookMiddleware implements MiddlewareInterface
 
         try {
             $response = $this->handle($request);
-        } catch (Exception $exception) {
-            $trace = str_replace(Environment::getProjectPath() . '/', '', $exception->getTraceAsString());
+        } catch (Throwable $throwable) {
+            $trace = str_replace(Environment::getProjectPath() . '/', '', $throwable->getTraceAsString());
             $trace = str_replace('): ', "):\n   ", $trace);
 
-            $html = '<div class="storybook-error"><h1>💥 Backend ERROR</h1><p>💬 ' . htmlspecialchars($exception->getMessage()) . '</p>' . PHP_EOL;
+            $html = '<div class="storybook-error"><h1>💥 Backend ERROR</h1><p>💬 ' . htmlspecialchars($throwable->getMessage()) . '</p>' . PHP_EOL;
             $html .= '🕵🏻‍♂️ Stack Trace:<br><pre>' . htmlspecialchars($trace) . '</pre>';
             $html .= <<<'EOF'
                 <style>
@@ -58,11 +59,12 @@ readonly class StorybookMiddleware implements MiddlewareInterface
                   padding: 10px;
                   overflow: auto;
                   font: monospace;
+                  max-height: 250px;
                 }
                 </style></div>
                 EOF;
             $html = str_replace(Environment::getProjectPath() . '/', '', $html);
-            $message = $exception->getMessage();
+            $message = $throwable->getMessage();
             $message = str_replace(Environment::getProjectPath() . '/', '', $message);
 
             $data = [

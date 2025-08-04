@@ -76,3 +76,10 @@ For that we can define a `*.transformers.php` file in the same directory as the 
 .. literalinclude:: /dummy-project/src/extensions/dummy_extension/Components/TransformerExample/TransformerExample.transformer.php
    :caption: Components/TransformerExample/TransformerExample.transformer.php
    :linenos:
+
+Dependency Injection for Argument Transformers
+-----------
+
+You can inject any `public service <https://docs.typo3.org/permalink/t3coreapi:errors-resulting-from-wrong-configuration>`_ into the argument transformer.
+For example see above `fileWithDefault`.
+You can inject a service that fetches data from an API to populate your objects.

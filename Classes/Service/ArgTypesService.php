@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Andersundsehr\Storybook\Service;
 
 use Andersundsehr\Storybook\Factory\ComponentDataFactory;
-use Andersundsehr\Storybook\Transformer\ArgumentTransformers;
 use Andersundsehr\Storybook\Transformer\Transformers;
 use DateTime;
 use DateTimeImmutable;

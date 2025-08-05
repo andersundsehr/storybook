@@ -48,7 +48,7 @@ Installation of EXT:storybook and storybook
    ..  literalinclude:: /dummy-project/.storybook/main.ts
        :caption: /.storybook/main.ts
        :language: ts
-       :emphasize-lines: 17
+       :emphasize-lines: 16
        :linenos:
 
    ..  literalinclude:: /dummy-project/.storybook/preview.ts

@@ -2,6 +2,8 @@ import { dirname, join } from 'node:path';
 import type { Entry, PresetProperty } from 'storybook/internal/types';
 import { createRequire } from 'module';
 import type { ViteFinal } from '@storybook/builder-vite';
+import { glob } from 'node:fs/promises';
+import { basename } from 'node:path';
 
 const require = createRequire(import.meta.url);
 
@@ -9,16 +11,54 @@ function getAbsolutePath<I extends string>(value: I): I {
   return dirname(require.resolve(join(value, 'package.json'))) as any;
 }
 
-export const addons = [
-  '@storybook/addon-docs',
-  '@storybook/addon-a11y',
-];
+export const addons = ['@storybook/addon-docs', '@storybook/addon-a11y'];
 
 /**
  * We want storybook to not use your local vite config.
  * As that is not really needed, and can cause issues or break storybook.
  */
-export const viteFinal: ViteFinal = (config, options) => {
+export const viteFinal: ViteFinal = async (config, options) => {
+  const envs = await options.presets.apply('env');
+  const watchOnlyStoriesActive = ['true', '1'].includes(envs.STORYBOOK_TYPO3_WATCH_ONLY_STORIES);
+  if (!watchOnlyStoriesActive) {
+    return config; // do not change anything if we are not in watch only mode
+  }
+
+  const colorYellow = '\x1b[33m';
+  const colorReset = '\x1b[0m';
+  console.log(colorYellow + '@andersundsehr/storybook-typo3:' + colorReset + ' STORYBOOK_TYPO3_WATCH_ONLY_STORIES enabled, only watching stories files');
+
+  const defaultGlobPattern = '/**/*.@(mdx|stories.@(mdx|js|jsx|mjs|ts|tsx))';
+  const storiesGlob = await options.presets.apply('stories');
+  const storiesFiles: string[] = [];
+  for (let globs of storiesGlob) {
+    if (typeof globs !== 'string') {
+      globs = globs.directory + (globs.files || defaultGlobPattern);
+    }
+    for await (const entry of glob(globs)) {
+      storiesFiles.push(entry);
+    }
+  }
+
+  const alwaysWatch = ['.env'];
+
+  config.server = config.server || {};
+  config.server.watch = config.server.watch || {};
+  config.server.watch.ignored = (file: string): boolean => {
+    const filename = basename(file);
+    if (alwaysWatch.includes(filename)) {
+      return false; // always watch these files
+    }
+
+    if (!filename.includes('.')) {
+      return false; // ignore directories
+    }
+
+    if (!storiesFiles.includes(file)) {
+      return true;
+    }
+    return false;
+  };
   return config;
 };
 
@@ -39,7 +79,7 @@ export const previewAnnotations: PresetProperty<'previewAnnotations'> = async (e
 export const tags = ['autodocs'];
 
 /**
- * BUGFIX for chromium based browsers and windows
+ * BUGFIX for chromium based browsers on windows
  * @see https://github.com/talkjs/country-flag-emoji-polyfill?tab=readme-ov-file
  */
 export const managerHead = `<style>

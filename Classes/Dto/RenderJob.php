@@ -19,6 +19,7 @@ final readonly class RenderJob
         /** @var array<string, null|bool|int|float|string> */
         public array $rawArgs,
         public string $baseHref,
+        public string $iframeContextId,
     ) {
     }
 }

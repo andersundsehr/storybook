@@ -6,11 +6,11 @@ namespace Andersundsehr\Storybook\Action;
 
 use Andersundsehr\Storybook\Factory\ComponentDataFactory;
 use Andersundsehr\Storybook\Factory\RenderJobFactory;
+use Andersundsehr\Storybook\Service\PreviewAssetRenderer;
 use Andersundsehr\Storybook\Service\ComponentCollectionService;
 use Andersundsehr\Storybook\Transformer\TransformersFactory;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
-use TYPO3\CMS\Core\Page\AssetRenderer;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextFactory;
 
 final readonly class RenderAction implements ActionInterface
@@ -19,7 +19,7 @@ final readonly class RenderAction implements ActionInterface
         private ComponentCollectionService $componentCollectionService,
         private RenderingContextFactory $renderingContextFactory,
         private RenderJobFactory $renderJobFactory,
-        private AssetRenderer $assetRenderer,
+        private PreviewAssetRenderer $previewAssetRenderer,
         private TransformersFactory $argumentTransformerFactory,
         private ComponentDataFactory $renderVariablesService,
     ) {
@@ -51,18 +51,8 @@ final readonly class RenderAction implements ActionInterface
         $html = $componentRenderer->renderComponent($renderJob->viewHelper->name, $variables->arguments, $variables->slots, $renderingContext);
         $componentHtml = trim($html);
 
-        $assetHtml = $this->renderAssets();
+        $assetHtml = $this->previewAssetRenderer->renderAssets($renderJob);
 
         return new HtmlResponse(implode(PHP_EOL, array_filter([$componentHtml, $assetHtml])));
-    }
-
-    private function renderAssets(): string
-    {
-        return trim(implode(PHP_EOL, array_filter([
-            $this->assetRenderer->renderJavaScript(),
-            $this->assetRenderer->renderInlineJavaScript(),
-            $this->assetRenderer->renderStyleSheets(),
-            $this->assetRenderer->renderInlineStyleSheets(),
-        ])));
     }
 }

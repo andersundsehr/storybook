@@ -38,6 +38,7 @@ final readonly class RenderJobFactory
         $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
         $storybookArguments = $data['arguments'] ?? throw new RuntimeException('Missing `arguments` parameter in request body', 8927775902);
+        $iframeContextId = $data['iframeContextId'] ?? throw new RuntimeException('Missing `iframeContextId` parameter in request body', 3505032869);
 
         $viewHelper = ($data['viewHelper'] ?? null) ?? throw new RuntimeException('Missing `viewHelper` parameter in request body', 9632741250);
         $site = $this->siteFinder->getSiteByIdentifier($data['site'] ?? throw new RuntimeException('Missing `site` parameter in request body', 2443948237));
@@ -101,10 +102,11 @@ final readonly class RenderJobFactory
             $renderRequest,
             $storybookArguments,
             $site->getBase()
-                ->withPath('')
-                ->withFragment('')
+                ->withPath('/')
                 ->withQuery('')
-                ->__toString()
+                ->withFragment('')
+                ->__toString(),
+            $iframeContextId
         );
     }
 }

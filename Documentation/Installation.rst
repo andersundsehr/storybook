@@ -46,13 +46,13 @@ Installation of EXT:storybook and storybook
    you need to update your `STORYBOOK_TYPO3_ENDPOINT` to your TYPO3 instance URL:
 
    ..  literalinclude:: /dummy-project/.storybook/main.ts
-       :caption: /.storybook/main.ts
+       :caption: .storybook/main.ts
        :language: ts
        :emphasize-lines: 16
        :linenos:
 
    ..  literalinclude:: /dummy-project/.storybook/preview.ts
-       :caption: /.storybook/preview.ts
+       :caption: .storybook/preview.ts
        :language: ts
        :linenos:
 
@@ -61,11 +61,24 @@ Installation of EXT:storybook and storybook
    add the scripts to your `package.json` file:
 
    ..  literalinclude:: /dummy-project/package.json
-       :caption: /package.json
+       :caption: package.json
        :language: json
        :emphasize-lines: 4-6
 
-5. # Now you have a working Storybook setup!
+5. DDEV configuration
+
+   **if** you are using `DDEV` you need to add the following to your `.ddev/config.yaml` file:
+
+   ..  code-block:: yaml
+       :caption: .ddev/config.yaml
+
+        web_extra_exposed_ports:
+        - name: storybook
+          container_port: 8080
+          http_port: 8080
+          https_port: 8081
+
+6. # Now you have a working Storybook setup!
 
    You can now run Storybook with the following command:
 
@@ -73,7 +86,9 @@ Installation of EXT:storybook and storybook
        :caption: start storybook
 
        npm run storybook
+       # or
+       yarn storybook
 
-   This will start the Storybook server and open it in your default browser.
+   This will start the Storybook server. You can than access it in your browser at your configured URL.
 
    You can now start creating stories for your TYPO3 Fluid components!

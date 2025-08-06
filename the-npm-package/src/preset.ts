@@ -21,7 +21,13 @@ export const addons = ['@storybook/addon-docs', '@storybook/addon-a11y'];
 export { viteFinal };
 
 export const core: PresetProperty<'core'> = {
-  builder: getAbsolutePath('@storybook/builder-vite'),
+  builder: {
+    name: '@storybook/builder-vite',
+    options: {
+      // to overwrite the user's vite.config.js
+      viteConfigPath: require.resolve('./empty-vite.config'),
+    },
+  },
   renderer: getAbsolutePath('@storybook/server'),
   disableTelemetry: true,
 };

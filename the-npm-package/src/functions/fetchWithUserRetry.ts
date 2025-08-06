@@ -56,7 +56,7 @@ async function retry<T extends PossibleResults>(errorOrResponse: unknown, url: s
     retry = true;
     confirmationMessage = `🔐 ${errorType.message}\n\n`
       + `🔗 url: ${url}\n\n`
-      + `💬 Please insert the correct API key:\ncan be found in the .env file:\n\n`;
+      + `💬 Please insert the correct API key:\ncan be found in the .env file of your TYPO3:\n\n`;
 
     // if there was no api key, it will be set into the .env from the php code automatically
     // we wait 1 second to give HMR time to update the .env file and reload the page, otherwise the user has to provide the key

@@ -1,17 +1,25 @@
-import { InlineConfig } from 'vite';
+import type { InlineConfig } from 'vite';
 import type { Options } from 'storybook/internal/types';
 import { glob } from 'node:fs/promises';
 import { basename } from 'node:path';
+import { vite404Plugin } from './vite404Plugin.ts';
 
-async function isFeatureEnabled(name: string, options: Options): Promise<boolean> {
-  const envs = await options.presets.apply('env');
-  return ['true', '1'].includes(envs[name] || process.env[name] || '0');
+async function isFeatureEnabled(name: string, envs: Record<string, string>): Promise<boolean> {
+  return ['true', '1'].includes(envs[name] || '0');
 }
+
+function addProxyPlugin(config: InlineConfig, url: string) {
+  config.plugins = [...(config.plugins || []), vite404Plugin(url)];
+  return config;
+}
+
 export async function viteFinal(config: InlineConfig, options: Options): Promise<InlineConfig> {
-  if (await isFeatureEnabled('STORYBOOK_TYPO3_WATCH_ONLY_STORIES', options)) {
+  const envs = await options.presets.apply('env');
+  if (await isFeatureEnabled('STORYBOOK_TYPO3_WATCH_ONLY_STORIES', envs)) {
     config = await watchOnlyStoriesConfig(config, options);
   }
   config = addAllowedHosts(config);
+  config = addProxyPlugin(config, envs.STORYBOOK_TYPO3_ENDPOINT);
   return config;
 }
 

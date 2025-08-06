@@ -15,6 +15,7 @@ use function bin2hex;
 use function file_exists;
 use function getenv;
 use function hash_equals;
+use function preg_match;
 use function putenv;
 use function random_bytes;
 use function str_contains;

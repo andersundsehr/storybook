@@ -33,11 +33,14 @@
     "@storybook/addon-docs": "^9.0.0",
     "@storybook/builder-vite": "^9.0.0",
     "@storybook/server": "^9.0.0",
+    "http-proxy-3": "^1.20.10",
+    "shimmer": "^1.2.1",
     "storybook": "^9.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
-    "@types/node": "^22.13.14"
+    "@types/node": "^22.13.14",
+    "@types/shimmer": "^1.2.0",
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "test": "node --test --experimental-strip-types **/*.test.{cts,mts,ts}",

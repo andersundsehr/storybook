@@ -24,10 +24,27 @@ type PossibleResults = string | object;
 
 let updatableApiKey = import.meta.env.STORYBOOK_TYPO3_KEY;
 
+function anySignal(...signals: (AbortSignal|undefined|null)[]) {
+  const controller = new AbortController();
+
+  for (const s of signals) {
+    if (!s) {
+      continue;
+    }
+    if (s.aborted) {
+      controller.abort(s.reason);
+      break;
+    }
+    s.addEventListener('abort', () => controller.abort(s.reason), { once: true });
+  }
+
+  return controller.signal;
+}
+
 export async function fetchWithUserRetry<T extends PossibleResults>(url: string, options: RequestInit, message: string, resultType: 'json' | 'text' = 'json'): Promise<T> {
   try {
     options = { ...options }; // Clone options to avoid mutating the original
-    options.signal = options.signal || AbortSignal.timeout(5000);
+    options.signal = anySignal(options.signal, AbortSignal.timeout(5000));
     options.headers = {
       ...options.headers,
       'Content-Type': 'application/json',

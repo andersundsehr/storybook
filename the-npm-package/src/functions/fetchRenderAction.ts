@@ -26,10 +26,8 @@ export async function fetchRenderAction(urlA: string, id: string, params: unknow
   if (!storyContext.component) {
     error('No component found in story context. This function requires a Fluid component to render.', 4123764578913);
   }
-  const viewHelper = (typeof storyContext.component === 'string') ? storyContext.component : storyContext.component.fullName;
-
   const body = {
-    viewHelper: viewHelper,
+    viewHelper: storyContext.component.fullName,
     arguments: params,
     site: storyContext.globals?.site || 'default',
     siteLanguage: storyContext.globals?.language || 'default',
@@ -41,6 +39,7 @@ export async function fetchRenderAction(urlA: string, id: string, params: unknow
     {
       method: 'POST',
       body: JSON.stringify(body),
+      signal: storyContext.abortSignal,
     },
     'rendering component',
     'text',

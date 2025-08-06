@@ -47,10 +47,14 @@ final readonly class PreviewAssetRenderer
         }
 
         return trim(implode(PHP_EOL, array_filter([
-            $this->assetRenderer->renderJavaScript(),
-            $this->assetRenderer->renderInlineJavaScript(),
-            $this->assetRenderer->renderStyleSheets(),
-            $this->assetRenderer->renderInlineStyleSheets(),
+            $this->assetRenderer->renderInlineJavaScript(true),
+            $this->assetRenderer->renderInlineJavaScript(false),
+            $this->assetRenderer->renderJavaScript(true),
+            $this->assetRenderer->renderJavaScript(false),
+            $this->assetRenderer->renderInlineStyleSheets(true),
+            $this->assetRenderer->renderInlineStyleSheets(false),
+            $this->assetRenderer->renderStyleSheets(true),
+            $this->assetRenderer->renderStyleSheets(false),
         ])));
     }
 

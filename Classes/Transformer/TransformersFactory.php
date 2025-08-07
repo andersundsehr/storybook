@@ -23,6 +23,19 @@ use function str_ends_with;
 
 final readonly class TransformersFactory
 {
+    public const array DEFAULT_SUPPORTED_TYPES = [
+        'bool',
+        'boolean',
+        'int',
+        'integer',
+        'float',
+        'double',
+        'string',
+        DateTime::class,
+        DateTimeImmutable::class,
+        DateTimeInterface::class,
+    ];
+
     public function __construct(private TypeTransformers $typeTransformers, private TransformerFactory $transformerFactory)
     {
     }
@@ -63,7 +76,7 @@ final readonly class TransformersFactory
             }
 
             $type = $argumentDefinition->getType();
-            if (in_array($type, ['bool', 'int', 'float', 'string', DateTime::class, DateTimeImmutable::class, DateTimeInterface::class], true)) {
+            if (in_array($type, self::DEFAULT_SUPPORTED_TYPES, true)) {
                 continue;
             }
 

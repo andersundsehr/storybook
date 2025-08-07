@@ -50,7 +50,7 @@ final readonly class TransformerFactory
             }
 
             $argumentName = $parameter->getName();
-            if (!in_array($type, ['string', 'int', 'float', 'bool']) && !class_exists($type) && !enum_exists($type)) {
+            if (!in_array($type, TransformersFactory::DEFAULT_SUPPORTED_TYPES) && !class_exists($type) && !enum_exists($type)) {
                 throw new InvalidArgumentException(
                     sprintf(
                         'Invalid type "%s" for argument "%s" in function "%s". Only basic types are allowed.',

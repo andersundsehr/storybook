@@ -1,4 +1,4 @@
-import { InlineConfig } from 'vite';
+import type { InlineConfig } from 'vite';
 import type { Options } from 'storybook/internal/types';
 import { glob } from 'node:fs/promises';
 import { basename } from 'node:path';

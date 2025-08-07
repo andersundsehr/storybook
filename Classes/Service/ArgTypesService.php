@@ -15,8 +15,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use UnitEnum;
 
 use function array_filter;
+use function array_keys;
 use function implode;
 use function in_array;
+use function strlen;
 
 final readonly class ArgTypesService
 {
@@ -71,7 +73,11 @@ final readonly class ArgTypesService
     /**
      * @return array<string, mixed>
      */
-    private function getArgTypesForArgument(ArgumentDefinition $argumentDefinition, ?ArgumentDefinition $parent = null, ?string $transformerArgumentString = null): array
+    private function getArgTypesForArgument(
+        ArgumentDefinition $argumentDefinition,
+        ?ArgumentDefinition $parent = null,
+        ?string $transformerArgumentString = null,
+    ): array
     {
         $options = [];
         $numberStep = null;
@@ -95,6 +101,15 @@ final readonly class ArgTypesService
                 }
 
                 $options[$label] = ArgTypesService::getCaseValue($case);
+            }
+
+            if (count($options) <= 4) {
+                $controlType = 'radio';
+            }
+
+            $strlen = strlen(implode('', array_keys($options)));
+            if ($strlen < 50) {
+                $controlType = 'inline-radio';
             }
         } else {
             throw new InvalidArgumentException(

@@ -30,9 +30,9 @@ test('test language and site switch', async ({ page }) => {
     await page.getByRole('button', { name: '🇦🇹 German - Austria' }).click();
     await expect(page.getByRole('button', { name: '🇫🇷 French' })).not.toBeVisible();
 
-    await page.getByRole('button', { name: '🌐 main http://web' }).click();
-    await page.getByRole('button', { name: '🌐 second-page http://web/' }).click();
-    await expect(toolbar, 'site switched Successfully').toContainText('🌐 second-page http://web/second-page/');
+    await page.getByRole('button', { name: '🌐 main' }).click();
+    await page.getByRole('button', { name: '🌐 The Second is always the best' }).click();
+    await expect(toolbar, 'site switched Successfully').toContainText('🌐 The Second is always the best');
     await expect(frame, 'translation to use correct language').toContainText('Translation: The default Header Comment. EN');
 
     await page.getByRole('button', { name: '🇺🇸 English' }).click(); // expect it switched back to English because German - Austria is not available on second-page

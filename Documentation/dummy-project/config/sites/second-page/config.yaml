@@ -1,4 +1,5 @@
 base: 'http://web/second-page/'
+websiteTitle: The Second is always the best
 errorHandling: {  }
 languages:
   -

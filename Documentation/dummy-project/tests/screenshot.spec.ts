@@ -103,7 +103,7 @@ test('screenshot-site-and-language', async ({ page }) => {
   await page.waitForLoadState('networkidle');
 
   await test.step('select site', async () => {
-    await page.getByRole('button', { name: '🌐 main http://web' }).click();
+    await page.getByRole('button', { name: '🌐 main' }).click();
     await expect(page).toHaveScreenshot('screenshot-select-site.png', { maxDiffPixelRatio: 0.01 });
   });
   await test.step('select language', async () => {

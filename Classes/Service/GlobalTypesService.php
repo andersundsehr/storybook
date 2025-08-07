@@ -27,9 +27,10 @@ final readonly class GlobalTypesService
         $globalTypes = [];
         foreach ($siteObjects as $site) {
             $siteIdentifier = $site->getIdentifier();
+            $title = ($site->getConfiguration()['websiteTitle'] ?? '') ?: $siteIdentifier;
             $globalTypes['site'][$siteIdentifier] = [
                 'value' => $siteIdentifier,
-                'title' => '🌐 ' . $siteIdentifier . ' ' . ($site->getRawConfiguration()['base'] ?? $site->getBase()),
+                'title' => '🌐 ' . $title,
             ];
 
             if ($currentSite && $currentSite !== $site->getIdentifier()) {

@@ -57,6 +57,10 @@ final readonly class KeyService
             return $key;
         }
 
+        if (!Environment::getContext()->isDevelopment()) {
+            $this->throw('No valid Storybook key found in environment variables. Please set the STORYBOOK_TYPO3_KEY environment variable or create a .env file with the key.');
+        }
+
         $envFilename = Environment::getProjectPath() . '/.env';
         if (!file_exists($envFilename)) {
             GeneralUtility::writeFile($envFilename, '');

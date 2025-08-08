@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Exception\Page\PageNotFoundException;
+use TYPO3\CMS\Core\Html\SanitizerBuilderFactory;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -32,6 +33,7 @@ final readonly class RenderJobFactory
         private SysTemplateRepository $sysTemplateRepository,
         private Context $context,
         private FrontendUserAuthentication $frontendUserAuthentication,
+        private SanitizerBuilderFactory $sanitizerBuilderFactory,
     ) {
     }
 
@@ -51,6 +53,8 @@ final readonly class RenderJobFactory
         $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
         $storybookArguments = $data['arguments'] ?? throw new RuntimeException('Missing `arguments` parameter in request body', 8927775902);
+        $storybookArguments = $this->sanitizeArguments($storybookArguments);
+
         $iframeContextId = $data['iframeContextId'] ?? throw new RuntimeException('Missing `iframeContextId` parameter in request body', 3505032869);
 
         $viewHelper = ($data['viewHelper'] ?? null) ?? throw new RuntimeException('Missing `viewHelper` parameter in request body', 9632741250);
@@ -157,5 +161,26 @@ final readonly class RenderJobFactory
         if ($typoScriptConfigArray['forceAbsoluteUrls'] ?? false) {
             $tsfe->absRefPrefix = $normalizedParams->getSiteUrl();
         }
+    }
+
+    /**
+     * @param array<string, mixed> $storybookArguments
+     * @return array<string, string|int|float|bool|null>
+     */
+    private function sanitizeArguments(array $storybookArguments): array
+    {
+        $result = [];
+        foreach ($storybookArguments as $key => $value) {
+            $result[$key] = match (gettype($value)) {
+                'integer', 'double', 'boolean', 'NULL' => $value,
+                'string' => $this->sanitizerBuilderFactory->build('default')->build()->sanitize($value),
+                default => throw new RuntimeException(
+                    'Invalid argument type for key "' . $key . '". Expected string, integer, double, boolean or NULL, got: ' . gettype($value),
+                    8927775903
+                ),
+            };
+        }
+
+        return $result;
     }
 }

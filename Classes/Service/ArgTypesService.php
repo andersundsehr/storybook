@@ -77,8 +77,7 @@ final readonly class ArgTypesService
         ArgumentDefinition $argumentDefinition,
         ?ArgumentDefinition $parent = null,
         ?string $transformerArgumentString = null,
-    ): array
-    {
+    ): array {
         $options = [];
         $numberStep = null;
         if ($argumentDefinition->isBooleanType()) {

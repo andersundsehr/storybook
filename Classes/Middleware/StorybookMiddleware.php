@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Middleware;
 
+use Exception;
+use Andersundsehr\Storybook\Action\ActionInterface;
 use Andersundsehr\Storybook\Action\ComponentMetaAction;
 use Andersundsehr\Storybook\Action\PreviewAction;
 use Andersundsehr\Storybook\Action\RenderAction;
 use Andersundsehr\Storybook\Service\KeyService;
-use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -81,22 +82,24 @@ readonly class StorybookMiddleware implements MiddlewareInterface
 
     private function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if ($request->getUri()->getPath() === '/_storybook/componentMeta') {
-            $componentMetaAction = $this->container->get(ComponentMetaAction::class);
-            return $componentMetaAction->__invoke($request);
+        // lazy load Actions to make it possible to catch exceptions in the constructor.
+        $action = match ($request->getUri()->getPath()) {
+            '/_storybook/componentMeta' => ComponentMetaAction::class,
+            '/_storybook/preview' => PreviewAction::class,
+            '/_storybook/render' => RenderAction::class,
+            default => null,
+        };
+
+        if (!$action) {
+            return new HtmlResponse('<h1>ERROR</h1><p>Invalid route to Storybook middleware</p>', 400);
         }
 
-        if ($request->getUri()->getPath() === '/_storybook/preview') {
-            $previewAction = $this->container->get(PreviewAction::class);
-            return $previewAction->__invoke($request);
+        $actionClass = $this->container->get($action);
+        if (!$actionClass instanceof ActionInterface) {
+            throw new Exception('Invalid action class: ' . $action . ' must be an instance of ' . ActionInterface::class, 5469520233);
         }
 
-        if ($request->getUri()->getPath() === '/_storybook/render') {
-            $renderAction = $this->container->get(RenderAction::class);
-            return $renderAction->__invoke($request);
-        }
-
-        return new HtmlResponse('<h1>ERROR</h1><p>Invalid route to Storybook middleware</p>', 400);
+        return $actionClass->__invoke($request);
     }
 
     /**

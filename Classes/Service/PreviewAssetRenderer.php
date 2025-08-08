@@ -30,7 +30,7 @@ final readonly class PreviewAssetRenderer
             $asset['options']['external'] = true;
             $this->assetCollector->addJavaScript(
                 $identifier,
-                $this->changeUrl($asset['source'], $renderJob->baseHref, $renderJob->iframeContextId),
+                $this->changeUrl($asset['source'], $renderJob->iframeContextId),
                 $asset['attributes'],
                 $asset['options']
             );
@@ -40,7 +40,7 @@ final readonly class PreviewAssetRenderer
             $asset['options']['external'] = true;
             $this->assetCollector->addStyleSheet(
                 $identifier,
-                $this->changeUrl($asset['source'], $renderJob->baseHref, $renderJob->iframeContextId),
+                $this->changeUrl($asset['source'], $renderJob->iframeContextId),
                 $asset['attributes'],
                 $asset['options']
             );
@@ -58,13 +58,8 @@ final readonly class PreviewAssetRenderer
         ])));
     }
 
-    private function changeUrl(string $source, string $absoluteUrl, string $iframeContextId): string
+    private function changeUrl(string $source, string $iframeContextId): string
     {
-        if (!str_contains($source, '://')) {
-            // make absolute URL
-            $source = $absoluteUrl . $source;
-        }
-
         // add cache bust so the module is reevaluated on each render
         // this is necessary because the module is cached by storybook
         if (str_contains($source, '#')) {

@@ -32,9 +32,7 @@ export function vite404Plugin(url: string): PluginOption {
           if (res.statusCode !== 404) {
             return false;
           }
-          console.log('😁 Proxying request: ' + req.method + ' ' + req.url);
-          // res.writeHead = origWriteHead;
-          // res.end = origEnd;
+          // console.log('😁 Proxying request: ' + req.method + ' ' + req.url);
           shimmer.massUnwrap([res], ['writeHead', 'end']);
 
           // TODO handle websocket requests, but how?

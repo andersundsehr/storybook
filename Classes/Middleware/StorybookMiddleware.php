@@ -18,8 +18,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\JsonResponse;
+use TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent;
+use TYPO3\CMS\Frontend\Resource\PublicUrlPrefixer;
 
 use function str_replace;
 use function str_starts_with;
@@ -29,6 +32,7 @@ readonly class StorybookMiddleware implements MiddlewareInterface
     public function __construct(
         private ContainerInterface $container,
         private KeyService $keyService,
+        private readonly ListenerProvider $listenerProvider,
     ) {
     }
 
@@ -39,7 +43,12 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         }
 
         $this->keyService->validateKey($request);
-
+        // Make sure all FAL resources are prefixed with absPrefPrefix
+        $this->listenerProvider->addListener(
+            GeneratePublicUrlForResourceEvent::class,
+            PublicUrlPrefixer::class,
+            'prefixWithAbsRefPrefix'
+        );
         try {
             $response = $this->handle($request);
         } catch (Throwable $throwable) {

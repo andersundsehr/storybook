@@ -36,6 +36,10 @@ final readonly class KeyService
             throw new ImmediateResponseException($response, 4080773490);
         }
 
+        if (getenv('STORYBOOK_TYPO3_DISABLE_KEY_VALIDATION') === '1') {
+            return;
+        }
+
         $givenKey = $request->getHeaderLine('X-Storybook-TYPO3-Key');
         if (!$givenKey) {
             $this->throw('Header X-Storybook-TYPO3-Key is missing');

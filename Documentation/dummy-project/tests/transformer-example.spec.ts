@@ -9,12 +9,12 @@ test('test argTypes/controls', async ({ page }) => {
   await expect(output).toMatchAriaSnapshot({ name: 'inital.aria.yml' });
 
   await test.step('change controls', async () => {
-    await contentFrame.locator('#control-applicationType').selectOption('::BACKEND=backend');
+    await contentFrame.getByRole('radio', { name: '::BACKEND=backend' }).check();
     await contentFrame.locator('#control-dateTimeInterface-date').fill('2025-02-17');
     await contentFrame.locator('#control-dateTimeInterface-time').click();
     await contentFrame.locator('#control-uri__url').fill('https://storybook.example.com/_storybook/preview?ncccc');
     await contentFrame.locator('#control-websocket__url').fill('github.com');
-    await contentFrame.locator('#control-contextIcon__severity').selectOption('::OK=0');
+    await contentFrame.getByRole('radio', { name: '::OK=0' }).check();
     await contentFrame.locator('#control-combineUri__host').fill('andersundsehr.com');
     await contentFrame.locator('#control-combineUri__path').fill('index.php');
     await contentFrame.locator('#set-combineUri__query').click();

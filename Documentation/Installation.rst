@@ -75,8 +75,8 @@ Installation of EXT:storybook and storybook
         web_extra_exposed_ports:
         - name: storybook
           container_port: 8080
-          http_port: 8080
-          https_port: 8081
+          http_port: 8081
+          https_port: 8080
 
 6. # Now you have a working Storybook setup!
 

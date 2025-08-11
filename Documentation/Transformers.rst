@@ -1,4 +1,4 @@
-:navigation-title: Complex Arguments / Transformers
+:navigation-title: Transformers (Complex Arguments)
 
 ..  _transformers:
 

@@ -1,9 +1,6 @@
 import { dirname, join } from 'node:path';
 import type { Entry, PresetProperty } from 'storybook/internal/types';
 import { createRequire } from 'module';
-import type { ViteFinal } from '@storybook/builder-vite';
-import { glob } from 'node:fs/promises';
-import { basename } from 'node:path';
 import { viteFinal } from './functions/viteFinal.ts';
 
 const require = createRequire(import.meta.url);
@@ -21,13 +18,7 @@ export const addons = ['@storybook/addon-docs', '@storybook/addon-a11y'];
 export { viteFinal };
 
 export const core: PresetProperty<'core'> = {
-  builder: {
-    name: '@storybook/builder-vite',
-    options: {
-      // to overwrite the user's vite.config.js
-      viteConfigPath: require.resolve('./empty-vite.config'),
-    },
-  },
+  builder: getAbsolutePath('@storybook/builder-vite'),
   renderer: getAbsolutePath('@storybook/server'),
   disableTelemetry: true,
 };

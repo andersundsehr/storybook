@@ -28,7 +28,9 @@ It is designed to be a quick introduction to the most important concepts and fea
     */Index
     WhyAndWhyNot
     FirstFluidComponent
+    AssetHandling
     Installation
+    ViteIntegration
     FirstStorybookStory
     Transformers
     *
@@ -48,9 +50,17 @@ It is designed to be a quick introduction to the most important concepts and fea
 
         Learn how to write your first Fluid component.
 
+    ..  card:: :ref:`Asset Handling <assetHandling>`
+
+        Learn how you can handle assets (JS/CSS) in your Components and Storybook.
+
     ..  card:: :ref:`Installation <installation>`
 
         Learn how to install this extension and Storybook.
+
+    ..  card:: :ref:`ViteIntegration <viteIntegration>`
+
+        Learn how to use storybook alongside your Vite setup.
 
     ..  card:: :ref:`First Storybook Story <firstStorybookStory>`
 

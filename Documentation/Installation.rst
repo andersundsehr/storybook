@@ -91,4 +91,8 @@ Installation of EXT:storybook and storybook
 
    This will start the Storybook server. You can than access it in your browser at your configured URL.
 
+   ..  tip::
+       If you are using vite in your Project, it can interfere with Storybook.
+       You can read more about this in the `how to use vite with storybook <
+
    You can now start creating stories for your TYPO3 Fluid components!

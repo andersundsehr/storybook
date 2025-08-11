@@ -60,8 +60,14 @@ final readonly class PreviewAssetRenderer
 
     private function changeUrl(string $source, string $iframeContextId): string
     {
+        if (str_contains($source, '/@vite')) {
+            // if you include /@vite/client or /@vite-plugin-checker-runtime-entry
+            // we do not want to reload it every time as that is not necessary
+            return $source;
+        }
+
         // add cache bust so the module is reevaluated on each render
-        // this is necessary because the module is cached by storybook
+        // this is necessary because the iframe is not reloaded and the module not re-evaluated automatically
         if (str_contains($source, '#')) {
             return $source . '&id=' . $iframeContextId;
         }

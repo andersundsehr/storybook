@@ -29,7 +29,7 @@ final readonly class PreviewAction implements ActionInterface
 
         return new JsonResponse([
             'initialGlobals' => array_map(array_key_first(...), $globalTypes),
-            'globalTypes' => array_map(fn($x): array => ([
+            'globalTypes' => array_map(fn(array $x): array => ([
                 'toolbar' => [
                     'dynamicTitle' => true,
                     'items' => array_values($x),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Factory;
 
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use Andersundsehr\Storybook\Dto\RenderJob;
 use Andersundsehr\Storybook\Dto\ViewHelperName;
 use Psr\Http\Message\ServerRequestInterface;
@@ -77,7 +78,7 @@ final readonly class RenderJobFactory
         }
 
         if (!$siteLanguage) {
-            $validLanguages = implode(', ', array_map(static fn($lang): string => $lang->getHreflang(), $site->getLanguages()));
+            $validLanguages = implode(', ', array_map(static fn(SiteLanguage $lang): string => $lang->getHreflang(), $site->getLanguages()));
             throw new RuntimeException(
                 'Invalid `siteLanguage` parameter in request body. for site: ' . $site->getIdentifier() . PHP_EOL
                 . ' got: ' . ($data['siteLanguage'] ?? 'null') . ' valid values are: ' . $validLanguages,

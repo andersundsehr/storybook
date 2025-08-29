@@ -32,7 +32,7 @@ readonly class StorybookMiddleware implements MiddlewareInterface
     public function __construct(
         private ContainerInterface $container,
         private KeyService $keyService,
-        private readonly ListenerProvider $listenerProvider,
+        private ListenerProvider $listenerProvider,
     ) {
     }
 

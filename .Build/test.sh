@@ -57,6 +57,7 @@ function testFunction {
      composerInstall)
        rm -rf dummy-project/vendor/
        COMPOSE_PROJECT_NAME=testing-storybook docker compose -f test.docker-compose.yml run --rm --remove-orphans typo3 su application -c "rm -f composer.lock && composer req typo3/cms-core:^${TYPO3_VERSION}"
+       chmod 777 $DOCKER_ROOT_PWD/Documentation/dummy-project/public/
        return
        ;;
      buildTheNpmPackage)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Factory;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use Andersundsehr\Storybook\Dto\ComponentData;
 use Andersundsehr\Storybook\Dto\RenderJob;
 use Andersundsehr\Storybook\Service\ArgTypesService;
@@ -59,7 +60,7 @@ final readonly class ComponentDataFactory
 
         foreach ($transformers->arguments as $argumentName => $argumentTransformer) {
             $argumentValues = $args[$argumentName] ?? null;
-            $requiredArgumentCount = count(array_filter($argumentTransformer->arguments, static fn($arg): bool => $arg->isRequired()));
+            $requiredArgumentCount = count(array_filter($argumentTransformer->arguments, static fn(ArgumentDefinition $arg): bool => $arg->isRequired()));
             if ($argumentValues === null && $requiredArgumentCount === 0) {
                 $argumentValues = [];
             }

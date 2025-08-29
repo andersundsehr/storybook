@@ -2,8 +2,7 @@
   "name": "storybook-minimal",
   "scripts": {
     "storybook": "storybook dev -p 8080 --ci",
-    "build-storybook": "storybook build",
-    "preview-storybook": "npx -y http-server storybook-static"
+    "build-storybook": "storybook build -o public/storybook/"
   },
   "dependencies": {
     "@andersundsehr/storybook-typo3": "file:vendor/andersundsehr/storybook/the-npm-package"

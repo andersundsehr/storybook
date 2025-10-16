@@ -1,0 +1,3 @@
+
+# cat=Storybook; type=string; label=LLL:EXT:storybook/Resources/Private/Language/locallang.xlf:excludeArguments
+excludeArguments = 

@@ -22,13 +22,22 @@ use function strlen;
 
 final readonly class ArgTypesService
 {
+    public function __construct(
+        protected readonly ConfigService $configService
+    ) {}
+
     /**
      * @return array<string, array<string, mixed>>
      */
     public function getArgTypes(ComponentDefinition $componentDefinition, Transformers $transformers): array
     {
+        $excludedArguments = $this->configService->getExcludedArguments();
+
         $argTypes = [];
         foreach ($componentDefinition->getArgumentDefinitions() as $argumentDefinition) {
+            if (in_array($argumentDefinition->getName(), $excludedArguments, true)) {
+                continue;
+            }
             $transformerDefinition = $transformers->arguments[$argumentDefinition->getName()] ?? null;
             if ($transformerDefinition) {
                 // If a transformer is defined, we use the transformer definition instead of the argument definition

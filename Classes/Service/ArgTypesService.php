@@ -23,8 +23,9 @@ use function strlen;
 final readonly class ArgTypesService
 {
     public function __construct(
-        protected readonly ConfigService $configService
-    ) {}
+        private ConfigService $configService
+    ) {
+    }
 
     /**
      * @return array<string, array<string, mixed>>
@@ -38,6 +39,7 @@ final readonly class ArgTypesService
             if (in_array($argumentDefinition->getName(), $excludedArguments, true)) {
                 continue;
             }
+
             $transformerDefinition = $transformers->arguments[$argumentDefinition->getName()] ?? null;
             if ($transformerDefinition) {
                 // If a transformer is defined, we use the transformer definition instead of the argument definition

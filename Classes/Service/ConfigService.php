@@ -11,8 +11,12 @@ class ConfigService
 {
     public function __construct(
         private readonly ExtensionConfiguration $extensionConfiguration
-    ) {}
+    ) {
+    }
 
+    /**
+     * @return string[]
+     */
     public function getExcludedArguments(): array
     {
         $excludeString = $this->extensionConfiguration->get('storybook', 'excludeArguments');

@@ -37,7 +37,9 @@ final readonly class TransformersFactory
         DateTimeInterface::class,
     ];
 
-    public function __construct(private TypeTransformers $typeTransformers, private TransformerFactory $transformerFactory, private ConfigService $configService) {}
+    public function __construct(private TypeTransformers $typeTransformers, private TransformerFactory $transformerFactory, private ConfigService $configService)
+    {
+    }
 
     public function get(
         ComponentTemplateResolverInterface&ComponentDefinitionProviderInterface $collection,

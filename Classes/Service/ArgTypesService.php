@@ -37,6 +37,16 @@ final readonly class ArgTypesService
         $argTypes = [];
         foreach ($componentDefinition->getArgumentDefinitions() as $argumentDefinition) {
             if (in_array($argumentDefinition->getName(), $excludedArguments, true)) {
+                if ($argumentDefinition->isRequired()) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            'Cannot exclude required argument "%s" from component "%s".',
+                            $argumentDefinition->getName(),
+                            $componentDefinition->getName()
+                        ),
+                        1760819640
+                    );
+                }
                 continue;
             }
 

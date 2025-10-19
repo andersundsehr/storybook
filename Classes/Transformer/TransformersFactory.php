@@ -38,11 +38,10 @@ final readonly class TransformersFactory
     ];
 
     public function __construct(
-        private TypeTransformers $typeTransformers, 
-        private TransformerFactory $transformerFactory, 
+        private TypeTransformers $typeTransformers,
+        private TransformerFactory $transformerFactory,
         private ConfigService $configService,
-    )
-    {
+    ) {
     }
 
     public function get(

@@ -47,6 +47,7 @@ final readonly class ArgTypesService
                         1760819640
                     );
                 }
+
                 continue;
             }
 

@@ -18,7 +18,7 @@ This document provides a guide on how to integrate your Vite configuration with 
 Usage with Vite AssetCollector
 ###
 
-If you are using `Vite AssetCollector <https://extensions.typo3.org/extension/vite_asset_collector>` make sure you set the `aliases` option to `EXT`.
+If you are using `Vite AssetCollector <https://extensions.typo3.org/extension/vite_asset_collector>`_ make sure you set the `aliases` option to `EXT`.
 
 .. code-block:: js
    :caption: vite.config.js|ts
@@ -27,7 +27,7 @@ If you are using `Vite AssetCollector <https://extensions.typo3.org/extension/vi
     import typo3 from 'vite-plugin-typo3';
     
     export default defineConfig({
-    	plugins: [typo3({ aliases: 'EXT' })],
+      plugins: [typo3({ aliases: 'EXT' })],
     });
 
 

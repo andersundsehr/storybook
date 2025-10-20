@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Andersundsehr\Storybook\Transformer;
 
 use Andersundsehr\Storybook\Dto\ViewHelperName;
+use Andersundsehr\Storybook\Service\ConfigService;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -36,8 +37,11 @@ final readonly class TransformersFactory
         DateTimeInterface::class,
     ];
 
-    public function __construct(private TypeTransformers $typeTransformers, private TransformerFactory $transformerFactory)
-    {
+    public function __construct(
+        private TypeTransformers $typeTransformers,
+        private TransformerFactory $transformerFactory,
+        private ConfigService $configService,
+    ) {
     }
 
     public function get(
@@ -64,9 +68,14 @@ final readonly class TransformersFactory
             }
         }
 
+        $excludedArguments = $this->configService->getExcludedArguments();
         $transformers = [];
 
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+            if (in_array($argumentName, $excludedArguments, true)) {
+                continue;
+            }
+
             if (isset($argumentTransformers->arguments[$argumentName])) {
                 $transformers[$argumentName] = $this->transformerFactory->fromCallable(
                     $argumentTransformers->arguments[$argumentName],
@@ -87,9 +96,9 @@ final readonly class TransformersFactory
             if (!$this->typeTransformers->has($type)) {
                 throw new RuntimeException(
                     'component requires a transformer for argument "' . $argumentName . '" of type "' . $type . '", but no transformer is defined in the file ' . $pdaFileName . ". \n"
-                    . "Please add a transformer for this argument, \n"
-                    . "or add one for that type, \n"
-                    . "or remove the argument from the component definition.",
+                        . "Please add a transformer for this argument, \n"
+                        . "or add one for that type, \n"
+                        . "or remove the argument from the component definition.",
                     6790927084
                 );
             }
@@ -130,7 +139,7 @@ final readonly class TransformersFactory
                 // TODO use better type comparison
                 throw new RuntimeException(
                     '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
-                    'Please adjust the transformer or the component definition.',
+                        'Please adjust the transformer or the component definition.',
                     4128088840
                 );
             }

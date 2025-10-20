@@ -15,6 +15,22 @@ By default, Storybook will use your local Vite configuration if it exists.
 However, some configurations may be overridden or not compatible with Storybook's setup.
 This document provides a guide on how to integrate your Vite configuration with Storybook effectively.
 
+Usage with Vite AssetCollector
+###
+
+If you are using `Vite AssetCollector <https://extensions.typo3.org/extension/vite_asset_collector>` make sure you set the `aliases` option to `EXT`.
+
+.. code-block:: js
+   :caption: vite.config.js|ts
+
+    import { defineConfig } from 'vite';
+    import typo3 from 'vite-plugin-typo3';
+    
+    export default defineConfig({
+    	plugins: [typo3({ aliases: 'EXT' })],
+    });
+
+
 Ignore your local Vite config
 ###
 

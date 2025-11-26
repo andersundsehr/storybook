@@ -69,7 +69,10 @@ async function retry<T extends PossibleResults>(errorOrResponse: unknown, url: s
   let retry = false;
   let confirmationMessage = '';
 
-  if (errorType.errorType === 'key') {
+  if (errorType.errorType === 'abort') {
+    // we do not ask the user to retry on aborts:
+    throw exception || new Error(`Request aborted: ${errorType.message}`);
+  } else if (errorType.errorType === 'key') {
     retry = true;
     confirmationMessage = `🔐 ${errorType.message}\n\n`
       + `🔗 url: ${url}\n\n`
@@ -133,6 +136,10 @@ type ErrorResult =
       message: string;
     }
   | {
+      errorType: 'abort';
+      message: string;
+    }
+  | {
       errorType: 'key';
       message: string;
     }
@@ -190,6 +197,12 @@ async function getErrorExplanation(errorOrResponse: unknown): Promise<ErrorResul
   }
 
   if (errorOrResponse instanceof Error) {
+    if (errorOrResponse.name === 'AbortError') {
+      return {
+        errorType: 'abort',
+        message: `The request was aborted (timeout or cancellation).`,
+      };
+    }
     return {
       errorType: 'network',
       message: errorOrResponse.message,

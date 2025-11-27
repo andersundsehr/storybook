@@ -11,7 +11,7 @@
     "Fluid"
   ],
   "require": {
-    "php": "~8.3.0 || ~8.4.0",
+    "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
     "typo3/cms-core": "^13.4.15",
     "typo3/cms-fluid": "^13.4.15",
     "typo3/cms-frontend": "^13.4.15",

@@ -1,9 +1,8 @@
 /.github/                   export-ignore
 /.Build/                    export-ignore
-/Documentation/             export-ignore
 /grumphp.yml                export-ignore
 /phpstan.neon               export-ignore
 /phpstan-baseline.neon      export-ignore
 /rector.php                 export-ignore
 /.gitignore                 export-ignore
-/.gitattribute              export-ignore
+/.gitattributes              export-ignore

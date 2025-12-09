@@ -30,9 +30,8 @@ return [
             'loginLogo' => '',
             'loginLogoAlt' => '',
         ],
-        'extensionmanager' => [
-            'automaticInstallation' => '1',
-            'offlineMode' => '0',
+        'storybook' => [
+            'excludeArguments' => '',
         ],
     ],
     'FE' => [

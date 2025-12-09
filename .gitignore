@@ -5,3 +5,4 @@ node_modules
 public/
 composer.lock
 Documentation-GENERATED-temp/
+auth.json

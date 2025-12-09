@@ -13,7 +13,7 @@
   - text: file => NULL fileInterface => NULL
 - list:
   - listitem: "uri: https://storybook.andersundsehr.com/_storybook/preview?nc"
-  - listitem: "websocket: wss:/andersundsehr.com"
+  - listitem: "/websocket: wss:/?andersundsehr.com/"
   - listitem: "contextIcon: actions-lightbulb"
   - listitem: "/dateTimeInterface: \\d+-\\d+-17T08:\\d+:\\d+\\+\\d+:\\d+/"
   - listitem: "applicationType: FRONTEND"

@@ -50,7 +50,7 @@ final readonly class TransformersFactory
     ): Transformers {
         $templateName = $collection->resolveTemplateName($viewHelperName->name);
         $fileName = $collection->getTemplatePaths()->resolveTemplateFileForControllerAndActionAndFormat('Default', $templateName);
-        $pdaFileName = preg_replace('/\.html$/', '.transformer.php', (string)$fileName) ?:
+        $pdaFileName = preg_replace('/(\.fluid)?\.html$/', '.transformer.php', (string)$fileName) ?:
             throw new RuntimeException(
                 'Could not resolve the transformer file for the view helper "' . $viewHelperName->fullName . '"',
                 5992417357,

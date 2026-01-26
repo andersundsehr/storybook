@@ -1,6 +1,30 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Access to property \$absRefPrefix on an unknown class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController\.$#'
+			identifier: class.notFound
+			count: 7
+			path: Classes/Factory/RenderJobFactory.php
+
+		-
+			message: '#^Call to method initializePageRenderer\(\) on an unknown class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Factory/RenderJobFactory.php
+
+		-
+			message: '#^Class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Factory/RenderJobFactory.php
+
+		-
+			message: '#^Parameter \$tsfe of method Andersundsehr\\Storybook\\Factory\\RenderJobFactory\:\:preparePageContentGeneration\(\) has invalid type TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Factory/RenderJobFactory.php
+
+		-
 			message: '#^Parameter \#2 \$configurator of method Symfony\\Component\\DependencyInjection\\ContainerBuilder\:\:registerAttributeForAutoconfiguration\(\) expects callable\(Symfony\\Component\\DependencyInjection\\ChildDefinition, Andersundsehr\\Storybook\\Transformer\\Attribute\\TypeTransformer, Reflector\)\: void, Closure\(Symfony\\Component\\DependencyInjection\\ChildDefinition, Andersundsehr\\Storybook\\Transformer\\Attribute\\TypeTransformer, ReflectionMethod\)\: void given\.$#'
 			identifier: argument.type
 			count: 1

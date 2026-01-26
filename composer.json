@@ -11,7 +11,7 @@
     "Fluid"
   ],
   "require": {
-    "php": "~8.3.0 || ~8.4.0",
+    "php": "~8.3.0 || ~8.4.0 || ~8.5.0",
     "typo3/cms-core": "^13.4.15 || ^14.0.0",
     "typo3/cms-fluid": "^13.4.15 || ^14.0.0",
     "typo3/cms-frontend": "^13.4.15 || ^14.0.0",
@@ -20,15 +20,10 @@
   },
   "require-dev": {
     "pluswerk/grumphp-config": "^10.1.3",
+    "saschaegerer/phpstan-typo3": "dev-feature/typo3-14-compatibility@dev",
+    "ssch/typo3-debug-dump-pass": "dev-feature/typo3-14-compatibility@dev",
     "ssch/typo3-rector": "^3.1.0",
-    "typo3/cms-extbase": "^13.4.15 || ^14.0.0",
-    "saschaegerer/phpstan-typo3": "^2.0.0",
-    "ssch/typo3-debug-dump-pass": "dev-feature/typo3-14-compatibility@dev"
-  },
-  "autoload": {
-    "psr-4": {
-      "Andersundsehr\\Storybook\\": "Classes/"
-    }
+    "typo3/cms-extbase": "^13.4.15 || ^14.0.0"
   },
   "repositories": [
     {
@@ -40,6 +35,11 @@
       "url": "https://github.com/chrissonntag/typo3-debug-dump-pass.git"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "Andersundsehr\\Storybook\\": "Classes/"
+    }
+  },
   "config": {
     "allow-plugins": {
       "ergebnis/composer-normalize": true,

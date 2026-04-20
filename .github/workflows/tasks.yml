@@ -165,11 +165,4 @@ jobs:
           && git commit -m 'x' -n \
           && git archive -o archive.zip HEAD --prefix=storybook-${{ env.version }}/ \
           && git reset --hard HEAD~ \
-          && cat ext_emconf.php \
           && php ~/.composer/vendor/bin/tailor ter:publish -vvv ${{ env.version }} --artefact=archive.zip --comment="${{ env.comment }}"
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: ter-release-php-${{ matrix.php }}-typo3-${{ matrix.typo3 }}-storybook-${{ matrix.storybook }}
-          path: archive.zip
-          archive: false

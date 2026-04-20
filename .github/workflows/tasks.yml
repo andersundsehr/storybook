@@ -39,6 +39,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.php }}-composer-
       - run: composer require typo3/minimal="^${{ matrix.typo3 }}" --dev --ignore-platform-req=php+
       - run: ./vendor/bin/grumphp run --ansi
+      - run: composer test:unit
 
   playwright:
     name: "playwright: php: ${{ matrix.php }} TYPO3: ${{ matrix.typo3 }} Storybook: ${{ matrix.storybook }}"

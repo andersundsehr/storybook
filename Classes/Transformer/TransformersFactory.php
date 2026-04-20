@@ -17,8 +17,10 @@ use TYPO3Fluid\Fluid\Core\Component\ComponentTemplateResolverInterface;
 use function array_keys;
 use function class_exists;
 use function enum_exists;
+use function explode;
 use function file_exists;
 use function in_array;
+use function interface_exists;
 use function preg_replace;
 use function str_ends_with;
 
@@ -113,7 +115,7 @@ final readonly class TransformersFactory
         return $result;
     }
 
-    private function validateReturnType(ComponentDefinition $componentDefinition, Transformers $transformers): void
+    public function validateReturnType(ComponentDefinition $componentDefinition, Transformers $transformers): void
     {
         $argumentDefinitions = $componentDefinition->getArgumentDefinitions();
         foreach (array_keys($transformers->arguments) as $argumentName) {
@@ -124,19 +126,7 @@ final readonly class TransformersFactory
                 continue;
             }
 
-            if ($resultType !== $targetType) {
-                if (str_ends_with($targetType, '[]') && $resultType === 'array') {
-                    continue;
-                }
-
-                $targetIsClass = class_exists($targetType) || interface_exists($targetType);
-                $resultIsClass = class_exists($resultType) || interface_exists($resultType);
-                // If the target type is a class, interface or enum, we can check if the result type is a subclass or implementation
-                if ($targetIsClass && $resultIsClass && is_a($resultType, $targetType, true)) {
-                    continue;
-                }
-
-                // TODO use better type comparison
+            if (!$this->isTypeAssignable($resultType, $targetType)) {
                 throw new RuntimeException(
                     '🥺🙏 please report this!!! https://github.com/andersundsehr/storybook/issues The transformer for argument "' . $argumentName . '" returns a value of type "' . $resultType . '" but the component expects a value of type "' . $targetType . '". ' .
                         'Please adjust the transformer or the component definition.',
@@ -144,6 +134,49 @@ final readonly class TransformersFactory
                 );
             }
         }
+    }
+
+    private function isTypeAssignable(string $resultType, string $targetType): bool
+    {
+        foreach ($this->splitUnionType($resultType) as $resultTypePart) {
+            $isCompatible = false;
+            foreach ($this->splitUnionType($targetType) as $targetTypePart) {
+                if ($this->isSingleTypeAssignable($resultTypePart, $targetTypePart)) {
+                    $isCompatible = true;
+                    break;
+                }
+            }
+
+            if (!$isCompatible) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function splitUnionType(string $type): array
+    {
+        return explode('|', $type);
+    }
+
+    private function isSingleTypeAssignable(string $resultType, string $targetType): bool
+    {
+        if ($resultType === $targetType) {
+            return true;
+        }
+
+        if (str_ends_with($targetType, '[]') && $resultType === 'array') {
+            return true;
+        }
+
+        $targetIsClass = class_exists($targetType) || interface_exists($targetType);
+        $resultIsClass = class_exists($resultType) || interface_exists($resultType);
+
+        return $targetIsClass && $resultIsClass && is_a($resultType, $targetType, true);
     }
 
     private function loadArgumentTransformer(mixed $pdaFileName, ViewHelperName $viewHelperName): mixed

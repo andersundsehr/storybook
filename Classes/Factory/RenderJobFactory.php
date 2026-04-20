@@ -22,6 +22,7 @@ use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use function json_decode;
@@ -113,6 +114,9 @@ final readonly class RenderJobFactory
 
 
         $renderRequest = $renderRequest->withAttribute('frontend.typoscript', $plainFrontendTypoScript);
+
+        $contentObjectRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $renderRequest = $renderRequest->withAttribute('currentContentObject', $contentObjectRenderer);
 
         // set the global, since some ViewHelper still fallback to $GLOBALS['TYPO3_REQUEST']
         $GLOBALS['TYPO3_REQUEST'] = $renderRequest;

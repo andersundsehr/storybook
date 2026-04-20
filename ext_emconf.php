@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Composer\InstalledVersions;
-
 /** @var string $_EXTKEY */
 $EM_CONF[$_EXTKEY] = [
     'title' => 'EXT:storybook',
@@ -12,7 +10,7 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Matthias Vogel',
     'author_email' => 'm.vogel@andersundsehr.com',
     'state' => 'stable',
-    'version' => InstalledVersions::getPrettyVersion('andersundsehr/storybook'),
+    'version' => 'dev-',
     'constraints' => [
         'depends' => [
             'typo3' => '13.4.15-14.3.999',

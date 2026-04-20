@@ -110,43 +110,51 @@ jobs:
 
 
   ter-release:
-    name: TER release
+    name: Publish new version to TER
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     needs: [ lint-php, playwright ]
     env:
-      TYPO3_EXTENSION_KEY: 'storybook'
-      REPOSITORY_URL: 'https://github.com/andersundsehr/storybook'
       TYPO3_API_TOKEN: ${{ secrets.TYPO3_API_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
       - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        id: get-version
+        run: echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: '8.5'
           extensions: intl, mbstring, xml, soap, zip, curl
+
+      - name: Get comment
+        id: get-comment
+        run: |
+          curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/andersundsehr/storybook/releases/tags/${{ env.version }} > release.json
+
+          readonly local comment=$(
+            jq -r '.name, "", .body, "", .html_url' release.json \
+            | php -r 'echo preg_replace("/[\x{1F1E6}-\x{1F1FF}\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{FE0F}\x{200D}]/u", "", stream_get_contents(STDIN));' \
+          )
+
+          {
+            echo 'comment<<EOF'
+            echo "$comment"
+            echo EOF
+          } >> "$GITHUB_ENV"
 
       - name: Install typo3/tailor
         run: composer global require typo3/tailor --prefer-dist --no-progress
 
-      - name: Upload EXT:storybook to TER
+      - name: Upload EXT:visual_editor to TER
         run: |
-          sed -i 's/InstalledVersions::getPrettyVersion('\''andersundsehr\/storybook'\'')/'\''${{ steps.get_version.outputs.VERSION }}'\''/g' ext_emconf.php \
+          sed -i "s|'dev-'|'${{ env.version }}'|g" ext_emconf.php \
           && git config --global user.email "no@one" \
           && git config --global user.name "No One" \
           && git add ext_emconf.php \
           && git commit -m 'x' -n \
-          && git archive -o archive.zip HEAD --prefix=storybook-${{ steps.get_version.outputs.VERSION }}/ \
+          && git archive -o archive.zip HEAD --prefix=storybook-${{ env.version }}/ \
           && git reset --hard HEAD~ \
-          && curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/andersundsehr/storybook/releases/tags/${{ steps.get_version.outputs.VERSION }} > release.json \
-          && php ~/.composer/vendor/bin/tailor ter:publish ${{ steps.get_version.outputs.VERSION }} --artefact=archive.zip \
-          --comment="$(cat release.json | jq -r '.name')
-
-          $(cat release.json | jq -r '.body')
-
-          $(cat release.json | jq -r '.html_url')"
+          && php ~/.composer/vendor/bin/tailor ter:publish -vvv ${{ env.version }} --artefact=archive.zip --comment="${{ env.comment }}"

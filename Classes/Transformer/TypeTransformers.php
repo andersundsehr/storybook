@@ -7,9 +7,12 @@ namespace Andersundsehr\Storybook\Transformer;
 use Andersundsehr\Storybook\Transformer\TransformerFactory;
 use RuntimeException;
 
-use function array_column;
 use function array_keys;
+use function explode;
 use function is_a;
+use function sort;
+use function str_contains;
+use function trim;
 
 use const PHP_INT_MIN;
 
@@ -52,6 +55,8 @@ final class TypeTransformers
             );
         }
 
+        $returnType = $this->normalizeType($returnType);
+
         $this->configuration[$returnType] ??= [];
         $this->configuration[$returnType][] = [
             'handler' => $handler::class,
@@ -87,6 +92,8 @@ final class TypeTransformers
 
     private function getInternal(string $returnType): ?Transformer
     {
+        $returnType = $this->normalizeType($returnType);
+
         if (isset($this->handlers[$returnType])) {
             return $this->handlers[$returnType];
         }
@@ -94,8 +101,7 @@ final class TypeTransformers
         $maxPriority = PHP_INT_MIN;
         $matched = null;
         foreach ($this->handlers as $type => $transformer) {
-            // if the requested type is contained in the transformers type, we can use it to transform
-            if (!is_a($type, $returnType, true)) {
+            if (!$this->matchesRequestedType($type, $returnType)) {
                 continue;
             }
 
@@ -115,6 +121,52 @@ final class TypeTransformers
         }
 
         return $matched;
+    }
+
+    private function matchesRequestedType(string $registeredType, string $requestedType): bool
+    {
+        foreach ($this->splitUnionType($registeredType) as $registeredTypePart) {
+            foreach ($this->splitUnionType($requestedType) as $requestedTypePart) {
+                if ($this->matchesSingleRequestedType($registeredTypePart, $requestedTypePart)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private function matchesSingleRequestedType(string $registeredType, string $requestedType): bool
+    {
+        if ($this->normalizeType($registeredType) === $this->normalizeType($requestedType)) {
+            return true;
+        }
+
+        if ($registeredType === $requestedType) {
+            return true;
+        }
+
+        return is_a($registeredType, $requestedType, true);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function splitUnionType(string $type): array
+    {
+        return explode('|', $type);
+    }
+
+    private function normalizeType(string $type): string
+    {
+        if (!str_contains($type, '|')) {
+            return trim($type);
+        }
+
+        $parts = array_map(trim(...), $this->splitUnionType($type));
+        sort($parts);
+
+        return implode('|', $parts);
     }
 
     /**

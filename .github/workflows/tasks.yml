@@ -2,7 +2,15 @@ name: Tasks
 
 on:
   push:
+    branches:
+      - "*"
+    tags:
+      - "*"
   pull_request:
+    branches:
+      - "*"
+  schedule:
+    - cron: "0 2 * * 1-5"
 
 jobs:
   lint-php:

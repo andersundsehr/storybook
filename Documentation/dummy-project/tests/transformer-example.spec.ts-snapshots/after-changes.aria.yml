@@ -16,7 +16,7 @@
   - group: transformerWithoutArguments => TYPO3\CMS\Core\Http\Uriprototypeobject
 - list:
   - listitem: "uri: https://storybook.example.com/_storybook/preview?ncccc"
-  - listitem: "websocket: wss:/github.com"
+  - listitem: "/websocket: wss:/?github.com/"
   - listitem: "contextIcon: actions-check"
   - listitem: "/dateTimeInterface: \\d+-\\d+-17T08:\\d+:\\d+\\+\\d+:\\d+/"
   - listitem: "applicationType: BACKEND"

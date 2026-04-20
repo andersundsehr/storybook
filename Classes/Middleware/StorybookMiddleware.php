@@ -24,6 +24,7 @@ use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent;
 use TYPO3\CMS\Frontend\Resource\PublicUrlPrefixer;
 
+use function str_contains;
 use function str_replace;
 use function str_starts_with;
 
@@ -52,6 +53,11 @@ readonly class StorybookMiddleware implements MiddlewareInterface
         try {
             $response = $this->handle($request);
         } catch (Throwable $throwable) {
+            $requestedJson = str_contains($request->getHeaderLine('Accept') . $request->getHeaderLine('Content-Type'), 'application/json');
+            if (!$requestedJson) {
+                throw $throwable;
+            }
+
             $trace = str_replace(Environment::getProjectPath() . '/', '', $throwable->getTraceAsString());
             $trace = str_replace('): ', "):\n   ", $trace);
 

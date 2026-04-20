@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Andersundsehr\Storybook\Factory;
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use Andersundsehr\Storybook\Dto\RenderJob;
 use Andersundsehr\Storybook\Dto\ViewHelperName;
@@ -25,6 +26,7 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use function json_decode;
 use function trim;
+use function version_compare;
 
 final readonly class RenderJobFactory
 {
@@ -115,19 +117,21 @@ final readonly class RenderJobFactory
         // set the global, since some ViewHelper still fallback to $GLOBALS['TYPO3_REQUEST']
         $GLOBALS['TYPO3_REQUEST'] = $renderRequest;
 
-        $tsfe = GeneralUtility::makeInstance(
-            TypoScriptFrontendController::class,
-            $this->context,
-            $site,
-            $siteLanguage,
-            new PageArguments(0, '0', []),
-            $this->frontendUserAuthentication
-        );
-        $GLOBALS['TSFE'] = $tsfe;
-        $tsfe->initializePageRenderer($renderRequest);
-        $this->preparePageContentGeneration($plainFrontendTypoScript, $tsfe, $normalizedParams);
+        if (version_compare((new Typo3Version())->getBranch(), '14.0', '<')) {
+            $tsfe = GeneralUtility::makeInstance(
+                TypoScriptFrontendController::class,
+                $this->context,
+                $site,
+                $siteLanguage,
+                new PageArguments(0, '0', []),
+                $this->frontendUserAuthentication
+            );
+            $GLOBALS['TSFE'] = $tsfe;
+            $tsfe->initializePageRenderer($renderRequest);
+            $this->preparePageContentGeneration($plainFrontendTypoScript, $tsfe, $normalizedParams);
 
-        $renderRequest = $renderRequest->withAttribute('frontend.controller', $tsfe);
+            $renderRequest = $renderRequest->withAttribute('frontend.controller', $tsfe);
+        }
 
         // set the global, since some ViewHelper still fallback to $GLOBALS['TYPO3_REQUEST']
         $GLOBALS['TYPO3_REQUEST'] = $renderRequest;

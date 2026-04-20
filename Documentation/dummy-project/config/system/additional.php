@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['path'] = dirname(__DIR__, 2) . '/var/sqlite/cms.sqlite';
 
 if (!is_dir(dirname($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['path']))) {

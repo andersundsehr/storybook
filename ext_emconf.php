@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Composer\InstalledVersions;
 
 /** @var string $_EXTKEY */
@@ -13,7 +15,7 @@ $EM_CONF[$_EXTKEY] = [
     'version' => InstalledVersions::getPrettyVersion('andersundsehr/storybook'),
     'constraints' => [
         'depends' => [
-            'typo3' => '13.4.15-13.4.999',
+            'typo3' => '13.4.15-14.0.999',
         ],
         'conflicts' => [],
         'suggests' => [],

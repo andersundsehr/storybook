@@ -1,7 +1,7 @@
 # With this setup you can Test the Storybook setup integrated with TYPO3, Fluid, EXT:storybook, Storybook and the Storybook Framework package
 services:
   typo3:
-    image: ghcr.io/pluswerk/php-dev:nginx-${PHP_IMAGE_VERSION:-8.4}-alpine
+    image: ghcr.io/pluswerk/php-dev:apache-${PHP_IMAGE_VERSION:-8.4}-alpine
     working_dir: ${DOCKER_ROOT_PWD}/Documentation/dummy-project
     volumes:
       - ${DOCKER_ROOT_PWD}:${DOCKER_ROOT_PWD}

@@ -9,7 +9,6 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function (ContainerConfigurator $container, ContainerBuilder $containerBuilder): void {
-    // adds tag backend.controller to services
     $containerBuilder->registerAttributeForAutoconfiguration(
         TypeTransformer::class,
         static function (ChildDefinition $definition, TypeTransformer $attribute, ReflectionMethod $reflector): void {

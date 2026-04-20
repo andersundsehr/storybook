@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Andersundsehr\DummyExtension\ComponentCollection;
 
 # This is required so EXT:storybook can find the component collection

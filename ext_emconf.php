@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Composer\InstalledVersions;
 
 /** @var string $_EXTKEY */

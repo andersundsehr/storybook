@@ -15,21 +15,17 @@
         "symlink": false,
         "reference": "none"
       }
-    },
-    {
-      "type": "git",
-      "url": "git@github.com:georgringer/TYPO3-Console.git"
     }
   ],
   "require": {
     "andersundsehr/storybook": "@dev",
     "andersundsehr/dummy_extension": "@dev",
-    "typo3/cms-core": "~14.0.0",
-    "typo3/cms-lowlevel": "^13.4.15 || ~14.0.0"
+    "typo3/cms-core": "^14.2.0",
+    "typo3/cms-lowlevel": "^13.4.15 || ^14.2.0"
   },
   "require-dev": {
     "helhum/dotenv-connector": "^3.1.2",
-    "helhum/typo3-console": "^8.2.2 || dev-main",
+    "helhum/typo3-console": "^8.3.1",
     "symfony/var-dumper": "^7.3"
   },
   "config": {

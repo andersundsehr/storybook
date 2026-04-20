@@ -11,7 +11,7 @@
   "bugs": "https://github.com/andersundsehr/storybook/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andersundsehr/storybook.git",
+    "url": "https://github.com/andersundsehr/storybook.git",
     "directory": "the-npm-package"
   },
   "type": "module",

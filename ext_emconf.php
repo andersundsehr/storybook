@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = [
     'version' => InstalledVersions::getPrettyVersion('andersundsehr/storybook'),
     'constraints' => [
         'depends' => [
-            'typo3' => '13.4.15-14.0.999',
+            'typo3' => '13.4.15-14.3.999',
         ],
         'conflicts' => [],
         'suggests' => [],

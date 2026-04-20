@@ -7,6 +7,12 @@ parameters:
 			path: Classes/Factory/RenderJobFactory.php
 
 		-
+			message: '#^Access to property \$cObj on an unknown class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController\.$#'
+			identifier: class.notFound
+			count: 2
+			path: Classes/Factory/RenderJobFactory.php
+
+		-
 			message: '#^Call to method initializePageRenderer\(\) on an unknown class TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController\.$#'
 			identifier: class.notFound
 			count: 1

@@ -8,6 +8,7 @@ use Andersundsehr\Storybook\Dto\RenderJob;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Page\AssetRenderer;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 use function array_filter;
 use function implode;
@@ -60,6 +61,10 @@ final readonly class PreviewAssetRenderer
 
     private function changeUrl(string $source, string $iframeContextId): string
     {
+        if (str_starts_with($source, 'EXT:')) {
+            $source = PathUtility::getPublicResourceWebPath($source);
+        }
+
         if (str_contains($source, '/@vite')) {
             // if you include /@vite/client or /@vite-plugin-checker-runtime-entry
             // we do not want to reload it every time as that is not necessary

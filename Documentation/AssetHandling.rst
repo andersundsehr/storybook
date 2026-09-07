@@ -13,7 +13,7 @@ The best option is to use the AssetCollector eg. f:asset.* in your components HT
 This allows you to integrate your JavaScript and CSS files directly into your components without needing to import them in your stories file.
 
 .. code-block:: html
-   :caption: Component/Card/Card.js
+   :caption: Component/Card/Card.html
 
     <f:asset.css identifier="EXT:my_extension/Component/Card/Card.css" href="EXT:my_extension/Component/Card/Card.css" inline="{true}"/>
     <f:asset.script type="module" identifier="EXT:my_extension/Component/Card/Card.js" src="EXT:my_extension/Component/Card/Card.js" inline="{true}"/>
@@ -23,7 +23,7 @@ Option 2: Integrate JS/CSS in your template
 Alternative is to import your JavaScript and CSS files directly in your stories file.
 
 .. code-block:: js
-   :caption: Component/Card/Card.js
+   :caption: Component/Card/Card.html
 
     <f:asset.css identifier="EXT:my_extension/Component/Card/Card.css">
       .your-css-class {

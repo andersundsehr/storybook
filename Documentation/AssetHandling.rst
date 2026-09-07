@@ -22,7 +22,7 @@ Option 2: Integrate JS/CSS in your template
 -----------------------------
 Alternative is to import your JavaScript and CSS files directly in your stories file.
 
-.. code-block:: js
+.. code-block:: html
    :caption: Component/Card/Card.html
 
     <f:asset.css identifier="EXT:my_extension/Component/Card/Card.css">

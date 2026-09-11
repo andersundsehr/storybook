@@ -82,7 +82,8 @@ const config: StorybookConfig = {
 
   env: (envs) => {
     return {
-      STORYBOOK_TYPO3_ENDPOINT: 'http://localhost/_storybook/',
+      STORYBOOK_TYPO3_ENDPOINT: 'http://localhost/_storybook/', // the endpoint of your TYPO3 installation, where the StorybookMiddleware is registered
+      STORYBOOK_TYPO3_BASE_ENDPOINT: 'http://localhost/',  // the base endpoint of your TYPO3 installation, where the Fluid components are rendered, optional, defaults to STORYBOOK_TYPO3_ENDPOINT without the _storybook path
       STORYBOOK_TYPO3_WATCH_ONLY_STORIES: '0', // set to '1' If you already use vite in your TYPO3 with HMR
       // do not set your api key here! https://www.deployhq.com/blog/protecting-your-api-keys-a-quick-guide
       ...envs, // envs given to storybook have precedence

@@ -37,7 +37,9 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-composer-
-      - run: composer require typo3/minimal="^${{ matrix.typo3 }}" --dev --ignore-platform-req=php+
+      # CI-only alias until TYPO3 accepts the security-fixed svg-sanitize ^1.0.
+      - run: composer require typo3/minimal="^${{ matrix.typo3 }}" "enshrined/svg-sanitize:1.0.0 as 0.22.99" --dev --sort-packages --no-interaction -W
+      - run: bash Tests/typo3-svg-sanitizer.sh
       - run: ./vendor/bin/grumphp run --ansi
       - run: composer test:unit
 

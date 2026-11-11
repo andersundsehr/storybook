@@ -10,9 +10,9 @@
   - group: typolink => TYPO3\CMS\Core\LinkHandling\TypolinkParameterprototypeobject
   - group: file => TYPO3\CMS\Core\Resource\Fileprototypeobject
   - link "fileInterface => TYPO3\\CMS\\Core\\Resource\\Fileprototypeobjectsee above":
-    - /url: "/#[a-f0-9]{32}/"
+    - /url: "/#(object-\\d+|[a-f0-9]{32})/"
   - link "fileWithDefault => TYPO3\\CMS\\Core\\Resource\\Fileprototypeobjectsee above":
-    - /url: "/#[a-f0-9]{32}/"
+    - /url: "/#(object-\\d+|[a-f0-9]{32})/"
   - group: transformerWithoutArguments => TYPO3\CMS\Core\Http\Uriprototypeobject
 - list:
   - listitem: "uri: https://storybook.example.com/_storybook/preview?ncccc"

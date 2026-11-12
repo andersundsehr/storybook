@@ -24,7 +24,7 @@ export async function viteFinal(config: InlineConfig, options: Options): Promise
     config = await watchOnlyStoriesConfig(config, options);
   }
   config = addAllowedHosts(config);
-  config = addProxyPlugin(config, envs.STORYBOOK_TYPO3_ENDPOINT);
+  config = addProxyPlugin(config, envs.STORYBOOK_TYPO3_BASE_ENDPOINT || envs.STORYBOOK_TYPO3_ENDPOINT.replace(/_storybook\//, '') );
   config = ensureTopLevelAwaitSupport(config);
   return config;
 }

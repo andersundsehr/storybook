@@ -37,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-composer-
-      - run: composer require typo3/minimal="^${{ matrix.typo3 }}" --dev --ignore-platform-req=php+
+      - run: composer require typo3/minimal="^${{ matrix.typo3 }}" "enshrined/svg-sanitize:~1.0.0" --dev --sort-packages --no-interaction -W
       - run: ./vendor/bin/grumphp run --ansi
       - run: composer test:unit
 

@@ -38,6 +38,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-composer-
       - run: composer require typo3/minimal="^${{ matrix.typo3 }}" --dev --ignore-platform-req=php+
+      # --ignore-platform-req=php+ may only skip the PHP check of dev dependencies (e.g. phpro/grumphp)
+      - if: matrix.php == '8.6'
+        run: composer check-platform-reqs --no-dev
       - run: ./vendor/bin/grumphp run --ansi
       - run: composer test:unit
 

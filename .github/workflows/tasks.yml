@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.3', '8.4', '8.5' ]
+        php: [ '8.3', '8.4', '8.5', '8.6' ]
         typo3: [ '13', '14' ]
     steps:
       - name: Setup PHP with PECL extension
@@ -38,6 +38,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-composer-
       - run: composer require typo3/minimal="^${{ matrix.typo3 }}" --dev --ignore-platform-req=php+
+      # --ignore-platform-req=php+ may only skip the PHP check of dev dependencies (e.g. phpro/grumphp)
+      - if: matrix.php == '8.6'
+        run: composer check-platform-reqs --no-dev
       - run: ./vendor/bin/grumphp run --ansi
       - run: composer test:unit
 
@@ -47,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ '8.3', '8.4', '8.5' ]
+        php: [ '8.3', '8.4', '8.5', '8.6' ]
         typo3: [ '13', '14' ]
         # not implemented yet:
         storybook: [ '9.0' ]

@@ -24,6 +24,7 @@
       "types": "./dist/index.d.ts"
     },
     "./preset": {
+      "import": "./dist/preset.js",
       "require": "./dist/preset.js",
       "types": "./dist/preset.d.ts"
     }

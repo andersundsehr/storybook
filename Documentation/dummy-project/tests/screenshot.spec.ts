@@ -18,7 +18,7 @@ test('card-example', async ({ page }) => {
   await removeUpgradeNotification(page);
   await page.waitForTimeout(1_000); // wait for the iframe to start loading
   await page.waitForLoadState('networkidle');
-  await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame().getByRole('button', { name: 'Show code' }).first().click();
+  await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame().getByRole('switch', { name: 'Show code' }).first().click();
   await page.waitForTimeout(300); // wait for the code to be shown
 
   await expect(page).toHaveScreenshot({ maxDiffPixelRatio: 0.01 });
@@ -75,7 +75,7 @@ test('screenshot-overview', async ({ page }) => {
   await removeUpgradeNotification(page);
   await page.waitForTimeout(1_000); // wait for the iframe to start loading
   await page.waitForLoadState('networkidle');
-  await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame().getByRole('button', { name: 'Show code' }).first().click();
+  await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame().getByRole('switch', { name: 'Show code' }).first().click();
   await page.waitForTimeout(300); // wait for the code to be shown
 
   await expect(page).toHaveScreenshot({ maxDiffPixelRatio: 0.01 });
@@ -88,7 +88,7 @@ test('transformer-example', async ({ page }) => {
   await removeUpgradeNotification(page);
   await page.waitForTimeout(1_000); // wait for the iframe to start loading
   await page.waitForLoadState('networkidle');
-  await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame().getByRole('button', { name: 'Show code' }).first().click();
+  await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame().getByRole('switch', { name: 'Show code' }).first().click();
   await page.waitForTimeout(300); // wait for the code to be shown
 
   await expect(page).toHaveScreenshot({ maxDiffPixelRatio: 0.01 });
@@ -107,6 +107,7 @@ test('screenshot-site-and-language', async ({ page }) => {
     await expect(page).toHaveScreenshot('screenshot-select-site.png', { maxDiffPixelRatio: 0.01 });
   });
   await test.step('select language', async () => {
+    await page.keyboard.press('Escape'); // close the site list, it covers the toolbar
     await page.getByRole('button', { name: '🇺🇸 English' }).click();
     await expect(page).toHaveScreenshot('screenshot-select-language.png', { maxDiffPixelRatio: 0.01 });
   });

@@ -18,7 +18,8 @@ export const addons = ['@storybook/addon-docs', '@storybook/addon-a11y'];
 export { viteFinal };
 
 export const core: PresetProperty<'core'> = {
-  builder: getAbsolutePath('@storybook/builder-vite'),
+  // Storybook 10 imports the builder as ES module, so it needs the entry file, not the package directory
+  builder: require.resolve('@storybook/builder-vite'),
   renderer: getAbsolutePath('@storybook/server'),
   disableTelemetry: true,
 };

@@ -11,6 +11,11 @@ const config: StorybookConfig = {
     disableTelemetry: true,
   },
 
+  features: {
+    // the onboarding guide of Storybook 10 changes the sidebar in the screenshots
+    sidebarOnboardingChecklist: false,
+  },
+
   env: (envs) => {
     return {
       STORYBOOK_TYPO3_ENDPOINT: 'http://localhost:8011/_storybook/', // if you use DDEV: process.env.DDEV_PRIMARY_URL

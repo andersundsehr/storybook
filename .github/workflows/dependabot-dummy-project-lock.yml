@@ -1,0 +1,56 @@
+name: Dependabot dummy project lock
+
+# The dummy project installs the-npm-package from vendor/ (path repository of Composer).
+# Dependabot updates the-npm-package/package.json, but not Documentation/dummy-project/package-lock.json,
+# so `npm ci` in the Playwright tests fails. This workflow updates that lock file in Dependabot pull requests.
+
+on:
+  pull_request:
+    paths:
+      - 'the-npm-package/package.json'
+
+permissions:
+  contents: write # push the updated lock file
+  actions: write # start the Tasks workflow for the new commit
+
+jobs:
+  update-lock:
+    name: Update the lock file of the dummy project
+    if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      HEAD_REF: ${{ github.head_ref }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Copy the-npm-package to vendor/ like Composer does
+        run: |
+          mkdir -p Documentation/dummy-project/vendor/andersundsehr/storybook
+          cp -r the-npm-package Documentation/dummy-project/vendor/andersundsehr/storybook/
+      - name: Update the lock file
+        working-directory: Documentation/dummy-project
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Commit and push the lock file
+        id: push
+        run: |
+          if git diff --quiet -- Documentation/dummy-project/package-lock.json; then
+            echo 'The lock file is up to date.'
+            echo 'pushed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Documentation/dummy-project/package-lock.json
+          git commit -m '[TASK] Update the lock file of the dummy project'
+          git push origin "HEAD:refs/heads/${HEAD_REF}"
+          echo 'pushed=true' >> "$GITHUB_OUTPUT"
+      - name: Start the Tasks workflow for the new commit
+        # a push with the GITHUB_TOKEN does not start workflows, workflow_dispatch does
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run tasks.yml --ref "${HEAD_REF}"

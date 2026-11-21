@@ -16,7 +16,8 @@ permissions:
 jobs:
   update-lock:
     name: Update the lock file of the dummy project
-    if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+    # the pull request author, not the actor: the actor is the person who updates the branch in the GitHub UI
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     env:
       HEAD_REF: ${{ github.head_ref }}

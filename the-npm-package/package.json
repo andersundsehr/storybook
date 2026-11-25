@@ -24,18 +24,19 @@
       "types": "./dist/index.d.ts"
     },
     "./preset": {
+      "import": "./dist/preset.js",
       "require": "./dist/preset.js",
       "types": "./dist/preset.d.ts"
     }
   },
   "dependencies": {
-    "@storybook/addon-a11y": "^9.0.0",
-    "@storybook/addon-docs": "^9.0.0",
-    "@storybook/builder-vite": "^9.0.0",
-    "@storybook/server": "^9.0.0",
+    "@storybook/addon-a11y": "^10.6.8",
+    "@storybook/addon-docs": "^10.6.8",
+    "@storybook/builder-vite": "^10.6.8",
+    "@storybook/server": "^10.6.8",
     "http-proxy-3": "^1.20.10",
     "shimmer": "^1.2.1",
-    "storybook": "^9.1.21"
+    "storybook": "^10.6.8"
   },
   "devDependencies": {
     "@types/node": "^22.13.14",
